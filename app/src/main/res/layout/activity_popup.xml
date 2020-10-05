@@ -39,13 +39,13 @@
             android:id="@+id/button_abnormalDetect"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="비정상상황 탐지" />
+            android:text="이상한 상황이 포함되게 편집하기" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="충격 감지"
+            android:text="충격이 감지된 상황이 포함되게 편집하기"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.531"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,7 @@
             android:id="@+id/button3"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="사용자 임의 편집"
+            android:text="사용자 임의로 편집하기"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.531"
             app:layout_constraintStart_toStartOf="parent"

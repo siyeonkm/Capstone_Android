@@ -51,7 +51,6 @@ public class SigninActivity extends AppCompatActivity {
 
         txtId = binding.textId;
         txtPw = binding.editTextTextPassword;
-        txtEmail = binding.textEmail;
 
         btnsignin.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -62,9 +61,6 @@ public class SigninActivity extends AppCompatActivity {
 
                 if(id.compareTo("") == 0 || email.compareTo("") == 0 || pw.compareTo("") == 0){
                     Toast.makeText(scontext, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show();
-                }
-                else if(idErr == 1 || pwErr == 1 || emailErr == 1) {
-                    Toast.makeText(scontext,"형식에 맞춰서 작성해주십시오",Toast.LENGTH_SHORT).show();
                 }
                 else {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
@@ -78,7 +74,6 @@ public class SigninActivity extends AppCompatActivity {
         //밑에 3개 함수는 실시간으로 형식 틀렸는지 알려주는것 (아이디, 비번, 이메일)
         iderr = binding.idError;
         pwerr = binding.pwError;
-        emailerr = binding.emailError;
 
         txtId.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,27 +113,6 @@ public class SigninActivity extends AppCompatActivity {
                 else {
                     pwerr.setVisibility(View.GONE);
                     pwErr = 0;
-                }
-            }
-        });
-
-        txtEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                email = txtEmail.getText().toString();
-                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.length() == 0 ) {
-                    emailerr.setVisibility(View.VISIBLE);
-                    emailErr = 1;
-                }
-                else {
-                    emailerr.setVisibility(View.GONE);
-                    emailErr = 0;
                 }
             }
         });

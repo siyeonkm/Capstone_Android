@@ -6,25 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".SigninActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="회원가입 화면입니다"
-        android:textSize="30sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="70dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <EditText
             android:id="@+id/text_id"
@@ -34,33 +39,16 @@
             android:hint="@string/id_hint"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="390dp" />
 
         <TextView
             android:id="@+id/id_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:text="영문or숫자or특수문자(_)로 5-12자이내에서 작성해주세요"
             android:textColor="@color/colorError"
-            android:text="영어or숫자or특수문자(_) 포함 5-12자로 작성해주세요"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/text_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email_hint"
-            android:ems="20"
-            android:inputType="textEmailAddress" />
-
-        <TextView
-            android:id="@+id/email_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/colorError"
-            android:text="이메일 형식에 맞게 작성해주세요"
             android:visibility="gone" />
 
         <EditText
@@ -71,35 +59,36 @@
             android:hint="@string/pw_hint"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="447dp" />
 
         <TextView
             android:id="@+id/pw_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/colorError"
             android:text="영어,숫자 포함 8-15자로 작성해주세요"
+            android:textColor="@color/colorError"
+            android:textSize="12sp"
             android:visibility="gone" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp" />
 
         <Button
             android:id="@+id/button_signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="회원가입"
+            android:background="@drawable/button"
+            android:text="회원가입 / 로그인"
+            android:textColor="@color/colorTheme_yellow"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#B3000000"
-            android:background="#B36E92FF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"/>
-
 
     </LinearLayout>
 

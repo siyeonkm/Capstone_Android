@@ -1,30 +1,54 @@
 package com.example.capstoneblackbox;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
+import com.example.capstoneblackbox.databinding.ActivityMainBinding;
+
 public class HomeActivity extends AppCompatActivity {
+    ActivityHomeBinding binding;
+    public static Context hcontext;
     private long backKeyPressedTime = 0;
     private Toast toast;
+
+    ImageButton btnvideo;
+    ImageButton btncrop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-    }
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        hcontext = this;
 
-    public void onButton_recordClicked(View v){
-        Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
-        startActivity(intent);
-    }
+        btnvideo = binding.videoButton;
+        btncrop = binding.cropButton;
 
-    public void onButton_editClicked(View v){
-        Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
-        startActivity(intent);
+        btnvideo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
+                startActivity(intent);
+            }
+        });
+
+        btncrop.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

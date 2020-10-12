@@ -2,64 +2,90 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popupbox"
     tools:context=".RecordActivity">
 
-    <!-- 타이틀바 -->
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="360dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="188dp"
-        android:background="#FFC107"
-        android:gravity="center"
-        android:text="편집 기능을 선택하세요"
-        android:textColor="#fff"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.066">
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button"
+            android:layout_gravity="center_horizontal"
+            android:text="편집방식을 선택하세요"
+            android:gravity="center"
+            android:textColor="@color/colorTheme_yellow"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp" />
 
         <Button
             android:id="@+id/button_abnormalDetect"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="이상한 상황이 포함되게 편집하기" />
+            android:background="@drawable/yellowbutton"
+            android:layout_gravity="center_horizontal"
+            android:text="이상한 상황 크롭하기"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTheme_black"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="충격이 감지된 상황이 포함되게 편집하기"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.531"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="302dp" />
+            android:background="@drawable/yellowbutton"
+            android:layout_gravity="center_horizontal"
+            android:text="충격 감지 상황 크롭하기"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTheme_black" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="300dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="사용자 임의로 편집하기"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.531"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="350dp" />
+            android:background="@drawable/yellowbutton"
+            android:layout_gravity="center_horizontal"
+            android:text="직접 편집하기"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTheme_black" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp" />
 
     </LinearLayout>
 

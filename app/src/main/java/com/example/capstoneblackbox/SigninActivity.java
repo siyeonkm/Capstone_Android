@@ -30,10 +30,9 @@ public class SigninActivity extends AppCompatActivity {
     TextView emailerr;
     TextView pwerr;
 
-    int idErr; int emailErr; int pwErr;
+    int idErr; int pwErr;
 
     String id;
-    String email;
     String pw;
 
     private String pwValidation = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d].{8,15}.$";
@@ -56,10 +55,9 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 id = txtId.getText().toString();
-                email = txtEmail.getText().toString();
                 pw = txtPw.getText().toString();
 
-                if(id.compareTo("") == 0 || email.compareTo("") == 0 || pw.compareTo("") == 0){
+                if(id.compareTo("") == 0 || pw.compareTo("") == 0){
                     Toast.makeText(scontext, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show();
                 }
                 else {

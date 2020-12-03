@@ -72,10 +72,10 @@
 - [ ] API 배포
 
 #### 안드로이드
-- [X] 인터페이스 구성
-- [X] figma로 UI 구성
-- [X] 회원가입/로그인 화면 구성
-- [X] 메인 화면 구성 
+- [X] 인터페이스 구성     https://csepotato.tistory.com/3 https://jungyoonn.tistory.com/3
+- [X] figma로 UI 구성    https://csepotato.tistory.com/2
+- [X] 회원가입/로그인 화면 구성  https://csepotato.tistory.com/4  https://csepotato.tistory.com/5
+- [X] 메인 화면 구성            https://csepotato.tistory.com/4  https://csepotato.tistory.com/5
 - [X] 영상 녹화 API 삽입
 - [ ] 수정 및 버그 캐치
 

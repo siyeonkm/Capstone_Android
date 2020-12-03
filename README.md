@@ -2,9 +2,12 @@
 ![image](https://user-images.githubusercontent.com/61506233/100989312-15140e80-3594-11eb-956e-30632ad1a4c9.png)
 - 딥러닝 기반 자동편집 블랙박스 어플리케이션
 
-## 1) 시연영상
-- 유트브 링크 : 
 
+
+## 1) 시연영상
+[![매직박스 시연영상](https://img.youtube.com/vi/DIdkWv8J9d8/0.jpg)](https://www.youtube.com/watch?v=DIdkWv8J9d8&feature=youtu.be)
+
+링크 : https://www.youtube.com/watch?v=DIdkWv8J9d8&feature=youtu.be
 
 ## 2) 프로젝트 소개
 ### 개발 배경
@@ -58,6 +61,32 @@
 - 안드로이드 기술블로그1 : https://csepotato.tistory.com/
 - 안드로이드 기술블로그2 : https://jungyoonn.tistory.com/
 - 백엔드 기술블로그 : https://cococode.tistory.com/
+
+### 진행상황
+#### 딥러닝
+- [X] 1. 문제정의 및 딥러닝 조사
+- [X] 2. 주행 중 모델 구축
+- [X] 3. 주차 중 모델 구축
+- [X] 데이터 추가수집
+- [ ] 음성인식 모델 구축
+- [ ] API 배포
+
+#### 안드로이드
+- [X] 인터페이스 구성
+- [X] figma로 UI 구성
+- [X] 회원가입/로그인 화면 구성
+- [X] 메인 화면 구성 
+- [X] 영상 녹화 API 삽입
+- [ ] 수정 및 버그 캐치
+
+#### 백엔드
+- [X] 데이터베이스 설계
+- [X] 데이터베이스 구현
+- [X] Django + Mysql 연결
+- [X] Rest API(안드로이드용)
+- [ ] AWS 호스팅
+- [ ] 앱 및 딥러닝 연결 
+
 
 ## 5) License
 

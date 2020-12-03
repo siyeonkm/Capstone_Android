@@ -55,8 +55,9 @@
 
 ## 4) 기술 블로그
 - 딥러닝 기술블로그 : https://kkminyoung.tistory.com/14
-- 안드로이드 기술블로그 : https://csepotato.tistory.com/
-- 백엔드 기술블로그 : 
+- 안드로이드 기술블로그1 : https://csepotato.tistory.com/
+- 안드로이드 기술블로그2 : https://jungyoonn.tistory.com/
+- 백엔드 기술블로그 : https://cococode.tistory.com/
 
 ## 5) License
 

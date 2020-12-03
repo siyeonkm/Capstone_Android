@@ -2,9 +2,12 @@
 ![image](https://user-images.githubusercontent.com/61506233/100989312-15140e80-3594-11eb-956e-30632ad1a4c9.png)
 - 딥러닝 기반 자동편집 블랙박스 어플리케이션
 
-## 1) 시연영상
-- 유트브 링크 : 
 
+
+## 1) 시연영상
+[![매직박스 시연영상](https://img.youtube.com/vi/DIdkWv8J9d8/0.jpg)](https://www.youtube.com/watch?v=DIdkWv8J9d8&feature=youtu.be)
+
+링크 : https://www.youtube.com/watch?v=DIdkWv8J9d8&feature=youtu.be
 
 ## 2) 프로젝트 소개
 ### 개발 배경

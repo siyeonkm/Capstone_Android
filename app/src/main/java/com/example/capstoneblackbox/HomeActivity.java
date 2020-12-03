@@ -3,16 +3,14 @@ package com.example.capstoneblackbox;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.provider.MediaStore;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
-import com.example.capstoneblackbox.databinding.ActivityMainBinding;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
@@ -23,6 +21,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton btnvideo;
     ImageButton btncrop;
 
+    static final int REQUEST_VIDEO_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +32,19 @@ public class HomeActivity extends AppCompatActivity {
 
         btnvideo = binding.videoButton;
         btncrop = binding.cropButton;
+        
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
-                startActivity(intent);
+                //기본 카메라 연결
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+                   startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+                }
+
+                //Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
+                //startActivity(intent);
             }
         });
 

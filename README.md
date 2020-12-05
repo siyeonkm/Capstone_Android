@@ -89,7 +89,7 @@
 
 
 ## 5) License
-
+Apache-2.0 License
 
 # 프로젝트 레파지토리 정리
 - 딥러닝 repository : https://github.com/kkminyoung/Capstone_model

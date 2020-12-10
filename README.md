@@ -1,8 +1,5 @@
-
-![image](https://user-images.githubusercontent.com/61506233/100989312-15140e80-3594-11eb-956e-30632ad1a4c9.png)
-- 딥러닝 기반 자동편집 블랙박스 어플리케이션
-
-
+# 딥러닝 기반 자동편집 블랙박스 어플리케이션
+<img src="https://user-images.githubusercontent.com/61506233/100989312-15140e80-3594-11eb-956e-30632ad1a4c9.png" width="20%"> 
 
 ## 1) 시연영상
 [![매직박스 시연영상](https://img.youtube.com/vi/DIdkWv8J9d8/0.jpg)](https://www.youtube.com/watch?v=DIdkWv8J9d8&feature=youtu.be)
@@ -46,7 +43,8 @@
 
 ### System Overview
 ![image](https://user-images.githubusercontent.com/61506233/100989472-41c82600-3594-11eb-9ce9-3675edf1dbdb.png)
-![image](https://user-images.githubusercontent.com/61506233/100991239-1e05df80-3596-11eb-9a5c-5473357e3f8b.png)
+
+<img src="https://user-images.githubusercontent.com/61506233/100991239-1e05df80-3596-11eb-9a5c-5473357e3f8b.png" width="70%"> 
 
 ## 3) Reference
 - [1] Yao, Y., Xu, M., Wang, Y., Crandall, D.J., Atkins, "Unsupervised traffic accident detection in first-person videos", in IROS, 2019  
@@ -64,10 +62,10 @@
 
 ### 진행상황
 #### 딥러닝
-- [X] 1. 문제정의 및 딥러닝 조사
-- [X] 2. 주행 중 모델 구축
-- [X] 3. 주차 중 모델 구축
-- [X] 데이터 추가수집
+- [X] 문제정의 및 딥러닝 조사 https://kkminyoung.tistory.com/14
+- [X] 주행 중 모델 구축 https://kkminyoung.tistory.com/14
+- [X] 주차 중 모델 구축 https://kkminyoung.tistory.com/14
+- [X] 데이터 추가수집 https://kkminyoung.tistory.com/14
 - [ ] 음성인식 모델 구축
 - [ ] API 배포
 
@@ -80,16 +78,16 @@
 - [ ] 수정 및 버그 캐치
 
 #### 백엔드
-- [X] 데이터베이스 설계
-- [X] 데이터베이스 구현
-- [X] Django + Mysql 연결
-- [X] Rest API(안드로이드용)
+- [X] 데이터베이스 설계 https://cococode.tistory.com/2
+- [X] 데이터베이스 구현 https://cococode.tistory.com/3
+- [X] Django + Mysql 연결 https://cococode.tistory.com/4
+- [X] Rest API(안드로이드용) https://cococode.tistory.com/5
 - [ ] AWS 호스팅
 - [ ] 앱 및 딥러닝 연결 
 
 
 ## 5) License
-Apache-2.0 License
+Code is under the [Apache Licence v2](https://github.com/kkminyoung/Capstone_model/blob/master/LICENSE)
 
 # 프로젝트 레파지토리 정리
 - 딥러닝 repository : https://github.com/kkminyoung/Capstone_model

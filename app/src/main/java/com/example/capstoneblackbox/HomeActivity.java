@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
-import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -36,6 +38,8 @@ public class HomeActivity extends AppCompatActivity {
     String usernum = "1";
     String videopath;
 
+    int timeout = 100000;
+
     static final int REQUEST_VIDEO_CAPTURE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +54,13 @@ public class HomeActivity extends AppCompatActivity {
 
         ConnectServer connectServerPost = new ConnectServer();
 
-        //int id_video = getResources().getIdentifier("test", "raw", getPackageName());
-
-        videopath = "android.resource://" + getPackageName() +"/raw/test";
-        Toast.makeText(hcontext, videopath ,Toast.LENGTH_LONG).show();
+        videopath = "android.resource://" + getPackageName() +"/raw/test2";
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                ConnectServer connectServerPost = new ConnectServer();
                connectServerPost.requestPost("http://2c5a42a8b05b.ngrok.io/api/full", videopath, usernum, path, size, date);
-
-
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -103,17 +102,22 @@ public class HomeActivity extends AppCompatActivity {
 
     class ConnectServer{
         //Client 생성
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).build();
+
 
         public void requestPost(String url, String video, String usernum, String path, String size, String date){
 
-            //Request Body에 서버에 보낼 데이터 작성
-            RequestBody requestBody = new FormBody.Builder().add("full_video", video).add("date", date)
-                    .add("size", size).add("storage_path", path).add("user_id", usernum).build();
+            //Request Body에 서버에 보낼 데이터 작
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("full_video", "test.mp4", RequestBody.create(MultipartBody.FORM, new File(video)))
+                    .addFormDataPart("date", date)
+                    .addFormDataPart("size", size)
+                    .addFormDataPart("storage_path", path)
+                    .addFormDataPart("user_id", usernum).build();
 
             //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
             Request request = new Request.Builder().url(url).post(requestBody).build();
-            Toast.makeText(hcontext,"전송완료",Toast.LENGTH_SHORT).show();
 
             //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
             client.newCall(request).enqueue(new Callback() {

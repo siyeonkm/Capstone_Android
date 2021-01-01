@@ -136,7 +136,7 @@ public class SigninActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-    class ConnectServer{
+    static class ConnectServer{
         //Client 생성
         OkHttpClient client = new OkHttpClient();
 

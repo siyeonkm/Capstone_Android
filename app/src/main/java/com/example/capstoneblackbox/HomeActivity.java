@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton btncrop;
 
     String date = "2021-01-01 12:30:01";
-    String size = "600";
+    String size = "1000";
     String path = "videos";
     String usernum = "1";
     String videopath;
@@ -50,9 +50,10 @@ public class HomeActivity extends AppCompatActivity {
 
         ConnectServer connectServerPost = new ConnectServer();
 
-        int id_video = getResources().getIdentifier("test", "raw", getPackageName());
+        //int id_video = getResources().getIdentifier("test", "raw", getPackageName());
 
-        videopath = "android.resource://" + getPackageName() +"/" + R.raw.test;
+        videopath = "android.resource://" + getPackageName() +"/raw/test";
+        Toast.makeText(hcontext, videopath ,Toast.LENGTH_LONG).show();
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override

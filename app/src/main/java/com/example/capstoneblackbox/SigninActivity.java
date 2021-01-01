@@ -75,7 +75,7 @@ public class SigninActivity extends AppCompatActivity {
                 else {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
                     ConnectServer connectServerPost = new ConnectServer();
-                    connectServerPost.requestPost("http://2c5a42a8b05b.ngrok.io/api/user", id, pw);
+                    connectServerPost.requestPost("http://a6af7a6941ee.ngrok.io/api/user", id, pw);
 
                     goHomeActivity();
                     //TODO: >> 있으면 토스트 발생 & 안넘어감

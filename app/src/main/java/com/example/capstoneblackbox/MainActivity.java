@@ -1,11 +1,7 @@
 package com.example.capstoneblackbox;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivityMainBinding;
 
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(mcontext,"형식에 맞춰서 작성해주십시오",Toast.LENGTH_SHORT).show();
                 }
                 else {
+
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
                     goHomeActivity();
                     //TODO: >> 있으면 토스트 발생 & 안넘어감

@@ -1,20 +1,29 @@
 package com.example.capstoneblackbox;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.capstoneblackbox.databinding.ActivityMainBinding;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.capstoneblackbox.databinding.ActivitySigninBinding;
+
+import java.io.IOException;
+
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SigninActivity extends AppCompatActivity {
     ActivitySigninBinding binding;
@@ -51,6 +60,9 @@ public class SigninActivity extends AppCompatActivity {
         txtId = binding.textId;
         txtPw = binding.editTextTextPassword;
 
+
+        ConnectServer connectServerPost = new ConnectServer();
+
         btnsignin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -62,6 +74,9 @@ public class SigninActivity extends AppCompatActivity {
                 }
                 else {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
+                    ConnectServer connectServerPost = new ConnectServer();
+                    connectServerPost.requestPost("http://2c5a42a8b05b.ngrok.io/api/user", id, pw);
+
                     goHomeActivity();
                     //TODO: >> 있으면 토스트 발생 & 안넘어감
                     //Toast.makeText(mcontext, "입력하신 아이디/패스워드가 이미 존재합니다", Toast.LENGTH_LONG).show();
@@ -121,4 +136,34 @@ public class SigninActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+    class ConnectServer{
+        //Client 생성
+        OkHttpClient client = new OkHttpClient();
+
+        public void requestPost(String url, String id, String password){
+
+            //Request Body에 서버에 보낼 데이터 작성
+            RequestBody requestBody = new FormBody.Builder().add("email", id).add("password", password).build();
+
+            //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
+            Request request = new Request.Builder().url(url).post(requestBody).build();
+
+            //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.d("error", "Connect Server Error is " + e.toString());
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    Log.d("aaaa", "Response Body is " + response.body().string());
+                }
+            });
+        }
+
+
+
+    }
+
 }

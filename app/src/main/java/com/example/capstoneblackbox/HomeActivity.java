@@ -2,21 +2,24 @@ package com.example.capstoneblackbox;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,9 +41,9 @@ public class HomeActivity extends AppCompatActivity {
     String usernum = "1";
     String videopath;
 
-    int timeout = 100000;
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +55,16 @@ public class HomeActivity extends AppCompatActivity {
         btnvideo = binding.videoButton;
         btncrop = binding.cropButton;
 
-        ConnectServer connectServerPost = new ConnectServer();
+        ConnectServer connectServerPost2 = new ConnectServer();
 
-        videopath = "android.resource://" + getPackageName() +"/raw/test2";
+        int id = R.raw.test;
+        videopath = "android.resource://" + getPackageName() + "/" + id;
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-               ConnectServer connectServerPost = new ConnectServer();
-               connectServerPost.requestPost("http://2c5a42a8b05b.ngrok.io/api/full", videopath, usernum, path, size, date);
+                ConnectServer connectServerPost2 = new ConnectServer();
+                connectServerPost2.requestPost("http://a6af7a6941ee.ngrok.io/api/full", videopath, path, size, date);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -102,25 +106,29 @@ public class HomeActivity extends AppCompatActivity {
 
     class ConnectServer{
         //Client 생성
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).build();
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).build();
 
 
-        public void requestPost(String url, String video, String usernum, String path, String size, String date){
+        public void requestPost(String url, String video, String path, String size, String date) {
 
-            //Request Body에 서버에 보낼 데이터 작
+
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("full_video", "test.mp4", RequestBody.create(MultipartBody.FORM, new File(video)))
+                    .addFormDataPart("full_video", "animal.mp4", RequestBody.create(MediaType.parse("video/mp4"), video))
                     .addFormDataPart("date", date)
                     .addFormDataPart("size", size)
-                    .addFormDataPart("storage_path", path)
-                    .addFormDataPart("user_id", usernum).build();
+                    .addFormDataPart("storage_path", videopath).build();
 
             //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
-            Request request = new Request.Builder().url(url).post(requestBody).build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+
+            Call call = client.newCall(request);
 
             //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
-            client.newCall(request).enqueue(new Callback() {
+            call.enqueue(new Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
                     Log.d("error", "Connect Server Error is " + e.toString());

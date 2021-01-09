@@ -67,15 +67,15 @@ public class HomeActivity extends AppCompatActivity {
         btncrop = binding.cropButton;
 
         ConnectServer connectServerPost2 = new ConnectServer();
-        tedPermission();
-        goToAlbum();
+        //tedPermission();
+        //goToAlbum();
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-                ConnectServer connectServerPost2 = new ConnectServer();
-                connectServerPost2.requestPost("http://44af370b0d8d.ngrok.io/api/full", videopath, path, size, date);
+                //ConnectServer connectServerPost2 = new ConnectServer();
+                //connectServerPost2.requestPost("http://44af370b0d8d.ngrok.io/api/full", videopath, path, size, date);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -83,8 +83,8 @@ public class HomeActivity extends AppCompatActivity {
                    startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
                 }*/
 
-                //Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
-                //startActivity(intent);
+                Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
+                startActivity(intent);
             }
         });
 

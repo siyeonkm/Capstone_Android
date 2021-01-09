@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivitySettingBinding;
 
+import static com.example.capstoneblackbox.MainActivity.mcontext;
+
 public class SettingActivity extends AppCompatActivity {
     ActivitySettingBinding binding;
     public static Context stcontext;
@@ -34,12 +36,9 @@ public class SettingActivity extends AppCompatActivity {
         myVid.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://0e75c4615da7.ngrok.io/login",
-                                ((MainActivity)MainActivity.mcontext).id, ((MainActivity)MainActivity.mcontext).pw);
 
-                ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestGet(stcontext, "http://0e75c4615da7.ngrok.io/api/full");
+                ((MainActivity) mcontext).connectServerPost
+                        .requestGet("http://4982a1961666.ngrok.io/api/full");
 
             }
         });

@@ -1,12 +1,10 @@
 package com.example.capstoneblackbox;
 
-import android.content.Context;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -20,16 +18,17 @@ import okhttp3.Response;
 
 public class ConnectServer {
 
-    OkHttpClient client = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).build();
+    public final OkHttpClient client = new OkHttpClient();
 
+    public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
-    public void requestPost(String url, String video, String path, String size, String date) {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("full_video", "filepathReal.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
                 .addFormDataPart("date", date)
                 .addFormDataPart("size", size)
-                .addFormDataPart("storage_path", path).build();
+                .addFormDataPart("storage_path", path)
+                .addFormDataPart("user_id",Integer.toString(user_id)).build();
 
         //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
         Request request = new Request.Builder()
@@ -84,7 +83,7 @@ public class ConnectServer {
         });
     }
 
-    public void requestGet(final Context context, String url) {
+    public void requestGet(String url) {
         String path = MediaStore.Video.Media.EXTERNAL_CONTENT_URI + "/magicbox";
 
         Request request = new Request.Builder()

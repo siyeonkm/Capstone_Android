@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     String date = "2021-01-01 12:30:01";
     String size = "1000";
     String path = "/uploads/test.mp4";
+    int user_id = 2;
     String videopath;
 
 
@@ -53,8 +54,6 @@ public class HomeActivity extends AppCompatActivity {
         btncrop = binding.cropButton;
         btnsetting = binding.buttonSetting;
 
-
-        ConnectServer connectServerPost2 = new ConnectServer();
         tedPermission();
         goToAlbum();
 
@@ -63,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://0e75c4615da7.ngrok.io/api/full", videopath, path, size, date);
+                        .requestPost("http://4982a1961666.ngrok.io/api/full", videopath, path, size, date, user_id);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);

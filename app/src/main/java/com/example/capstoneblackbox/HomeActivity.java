@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -19,19 +18,7 @@ import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -41,16 +28,15 @@ public class HomeActivity extends AppCompatActivity {
     private Toast toast;
 
     private static final int PICK_FROM_ALBUM = 1;
-    private File tempFile;
 
     ImageButton btnvideo;
     ImageButton btncrop;
+    ImageButton btnsetting;
 
     String date = "2021-01-01 12:30:01";
     String size = "1000";
     String path = "/uploads/test.mp4";
     String videopath;
-    String videouri;
 
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
@@ -65,17 +51,19 @@ public class HomeActivity extends AppCompatActivity {
 
         btnvideo = binding.videoButton;
         btncrop = binding.cropButton;
+        btnsetting = binding.buttonSetting;
+
 
         ConnectServer connectServerPost2 = new ConnectServer();
-        //tedPermission();
-        //goToAlbum();
+        tedPermission();
+        goToAlbum();
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-                //ConnectServer connectServerPost2 = new ConnectServer();
-                //connectServerPost2.requestPost("http://44af370b0d8d.ngrok.io/api/full", videopath, path, size, date);
+                ((MainActivity)MainActivity.mcontext).connectServerPost
+                        .requestPost("http://0e75c4615da7.ngrok.io/api/full", videopath, path, size, date);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -83,8 +71,8 @@ public class HomeActivity extends AppCompatActivity {
                    startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
                 }*/
 
-                Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
-                startActivity(intent);
+                //Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
+                //startActivity(intent);
             }
         });
 
@@ -92,6 +80,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
+                startActivity(intent);
+            }
+        });
+
+        btnsetting.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
@@ -113,47 +109,6 @@ public class HomeActivity extends AppCompatActivity {
             finish();
             toast.cancel();
         }
-    }
-
-    class ConnectServer{
-        //Client 생성
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).build();
-
-
-        public void requestPost(String url, String video, String path, String size, String date) {
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("full_video", "filepathReal.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
-                    .addFormDataPart("date", date)
-                    .addFormDataPart("size", size)
-                    .addFormDataPart("storage_path", path).build();
-
-            //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(requestBody)
-                    .build();
-
-            Call call = client.newCall(request);
-
-            //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    Log.d("aaaa", "Response Body is " + response.body().string());
-                }
-            });
-        }
-
-
-
-
-
     }
 
     private void tedPermission() {
@@ -182,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void goToAlbum() {
 
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         intent.setType("video/*");
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
@@ -195,7 +150,6 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == PICK_FROM_ALBUM) {
 
             Uri uri2 = data.getData();
-            videouri = String.valueOf(uri2);
 
             if (uri2.toString().contains("video")) {
                 UriToPath uri2path = new UriToPath();

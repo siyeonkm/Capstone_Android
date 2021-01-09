@@ -39,6 +39,8 @@
             android:ems="10"
             android:hint="@string/id_hint"
             android:inputType="textPersonName"
+            android:backgroundTint="@color/colorTheme_black"
+            android:textColor="@color/colorTheme_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="390dp" />
@@ -58,6 +60,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/pw_hint"
+            android:backgroundTint="@color/colorTheme_black"
+            android:textColor="@color/colorTheme_black"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

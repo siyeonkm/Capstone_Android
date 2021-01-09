@@ -3,7 +3,6 @@
 
     <string name="pw_hint">비밀번호</string>
     <string name="id_hint">아이디</string>
-    <string name="email_hint">이메일</string>
 
     <!-- Ted Permission -->
     <string name="permission_1">[설정] > [권한] 에서 권한을 허용할 수 있습니다.</string>

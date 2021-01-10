@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                    exist = 3;
 
                    //TODO: >> 있으면 넘어감
-                    connectServerPost.requestPost("http://4982a1961666.ngrok.io/login", id, pw);
+                    connectServerPost.requestPost("http://48f7a7e01ee7.ngrok.io/login", id, pw);
 
                     //서버한테 ok응답 받을때까지 기다림
                     while(exist ==3) {

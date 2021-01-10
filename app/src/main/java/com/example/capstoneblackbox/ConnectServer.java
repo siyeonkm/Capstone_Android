@@ -16,9 +16,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//서버에 연결해주는 각종 함수들 가짐
+//딱한번 cookiejar생성, 딱하나의 client를 생성함.
+//post 2종류(로그인용, 비디오업로드용), get 한 종류(비디오다운용) 만들어져있음
 public class ConnectServer {
 
-    public final OkHttpClient client = new OkHttpClient();
+    public final MyCookieJar myCookieJar = new MyCookieJar();
+    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 

@@ -3,6 +3,7 @@ package com.example.capstoneblackbox;
 import io.realm.RealmObject;
 
 //현재 로그인한 유저의 정보를 앱 내에서 담고있는 data class
+//근데 아직까지 쓸모는 없음 혹시 로컬저장소에 저장해놓아야할 유저정보 있을까봐 만들어놓음
 public class UserInfo extends RealmObject {
     private String id;
     private String pw;

@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     String pw;
 
     Realm realm;
-    public int exist = 3;
 
     int idErr; int pwErr;
 
@@ -71,28 +70,32 @@ public class MainActivity extends AppCompatActivity {
                if(id.compareTo("") == 0 || pw.compareTo("") == 0){
                     Toast.makeText(mcontext, "빈칸을 채워주세요", Toast.LENGTH_SHORT).show();
                 }
-                /*else if(idErr == 1 || pwErr == 1) {
-                    Toast.makeText(mcontext,"형식에 맞춰서 작성해주십시오",Toast.LENGTH_SHORT).show();
-                }*/
-                else {
-                   exist = 3;
+               else {
 
                    //TODO: >> 있으면 넘어감
-                    connectServerPost.requestPost("http://48f7a7e01ee7.ngrok.io/login", id, pw);
+                    connectServerPost.start();
+                    connectServerPost.requestPost("http://93a969d683bd.ngrok.io/login", id, pw);
 
-                    //서버한테 ok응답 받을때까지 기다림
-                    while(exist ==3) {
-                    }
-
-                    if(exist == 1) {
+                   synchronized(connectServerPost) {
+                       try {
+                           // b.wait()메소드를 호출.
+                           // 메인쓰레드는 정지
+                           // ThreadB가 5번 값을 더한 후 notify를 호출하게 되면 wait에서 깨어남
+                           System.out.println("b가 완료될때까지 기다립니다.");
+                           connectServerPost.wait();
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                   }
+                   if(connectServerPost.exist == 1) {
                         goHomeActivity();
-                    }
-                    //TODO: 토스트 발생 & 안넘어감
-                    else {
-                        Toast.makeText(mcontext, "없는 아이디입니다. 다시 입력해주세요", Toast.LENGTH_LONG).show();
-                    }
+                   }
+                   //TODO: 토스트 발생 & 안넘어감
+                   else if (connectServerPost.exist == 0) {
+                       Toast.makeText(mcontext, "없는 아이디입니다. 다시 입력해주세요", Toast.LENGTH_LONG).show();
+                   }
 
-                }
+               }
             }
         });
 
@@ -164,10 +167,6 @@ public class MainActivity extends AppCompatActivity {
     public void goSigninActivity() {
         Intent intent = new Intent(MainActivity.this, SigninActivity.class);
         startActivity(intent);
-    }
-
-    public void setExist(int e) {
-        this.exist = e;
     }
 
 }

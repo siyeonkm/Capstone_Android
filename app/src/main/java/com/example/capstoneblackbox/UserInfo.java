@@ -6,13 +6,19 @@ import io.realm.RealmObject;
 //근데 아직까지 쓸모는 없음 혹시 로컬저장소에 저장해놓아야할 유저정보 있을까봐 만들어놓음
 public class UserInfo extends RealmObject {
     private String id;
-    private String pw;
-    private int exist;
+    private String full_video;
+    private String date;
+    private String size;
+    private String storage_path;
+    private String user_id;
 
-    public UserInfo(String id, String pw, int exist){
+    public UserInfo(String id, String video, String date, String size, String path, String user){
         this.id = id;
-        this.pw = pw;
-        this.exist = exist;
+        this.full_video = video;
+        this.date = date;
+        this.size = size;
+        this.storage_path = path;
+        this.user_id = user;
     }
 
     public UserInfo(){
@@ -27,19 +33,35 @@ public class UserInfo extends RealmObject {
         return id;
     }
 
-    public void setPw(String pw) {
-        this.pw = pw;
+    public String getDate() {
+        return date;
     }
 
-    public String getPw() {
-        return pw;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public int getExist() {
-        return exist;
+    public String getSize() {
+        return size;
     }
 
-    public void setExist(int exist) {
-        this.exist = exist;
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getStorage_path() {
+        return storage_path;
+    }
+
+    public void setStorage_path(String storage_path) {
+        this.storage_path = storage_path;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

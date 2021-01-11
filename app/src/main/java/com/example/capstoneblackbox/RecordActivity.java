@@ -1,8 +1,11 @@
 package com.example.capstoneblackbox;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -13,16 +16,24 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
 import java.io.File;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class RecordActivity extends AppCompatActivity implements AutoPermissionsListener {
@@ -30,11 +41,17 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     MediaRecorder recorder;
     String filename;
     SurfaceHolder holder;
+    Button record;
+    private boolean recording = false;
+    long mNow;
+    Date mDate;
+  //  ImageView gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_record);
 
         SurfaceView surface = new SurfaceView(this);
@@ -44,29 +61,67 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
         FrameLayout frame = findViewById(R.id.container);
         frame.addView(surface);
-
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+/*
+        gallery =findViewById(R.id.gallery);
+        gallery.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startRecording();
+                //동영상 갤러리로 가서 보여주기
             }
         });
+        gallery.setVisibility(View.VISIBLE);
 
-        Button button2 = findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopRecording();
-            }
-        });
-
+ */
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+        String format_time = mFormat.format(mDate);
 
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filename = sdcard + File.separator + "recorded.mp4";
+        filename = sdcard + File.separator + format_time + ".mp4";
+
+        record = findViewById(R.id.record);
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!recording){
+                    record.setText("녹화 중지");
+                    recording = true;
+                    startRecording();
+                }
+                else{
+                    record.setText("녹화 시작");
+                    recording = false;
+                    stopRecording();
+                    //Uri uri = getUriFromPath(filename);
+                    //RequestOptions option1 = new RequestOptions().circleCrop();
+                    //Glide.with(getApplicationContext()).load(uri).apply(option1).into(gallery);
+
+                   // gallery.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
+
+        //filename = sdcard + File.separator + "recorded.mp4";
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
     }
+/*
+    public Uri getUriFromPath(String filePath) {
+        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, "_data = '" + filePath + "'", null, null);
+
+        cursor.moveToNext();
+        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+        return uri;
+    }
+
+ */
 
     public void startRecording() {
         if (recorder == null) {
@@ -75,10 +130,11 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        //recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-        recorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+
+        //recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        //recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        //recorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         recorder.setOutputFile(filename);
 
         recorder.setPreviewDisplay(holder.getSurface());
@@ -133,13 +189,12 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
     @Override
     public void onDenied(int requestCode, String[] permissions) {
-        Toast.makeText(this, "permissions denied : " + permissions.length,
-                Toast.LENGTH_LONG).show();
+       // Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onGranted(int requestCode, String[] permissions) {
-        Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
     }
 
 /*

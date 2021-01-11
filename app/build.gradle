@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.capstoneblackbox"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -23,6 +23,10 @@ android {
 
     viewBinding {
         enabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -48,4 +52,7 @@ dependencies {
     implementation 'com.github.pedroSG94:AutoPermissions:1.0.3'
 
     apply plugin: 'realm-android'
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

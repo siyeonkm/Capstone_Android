@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,15 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivitySigninBinding;
-
-import java.io.IOException;
-
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class SigninActivity extends AppCompatActivity {
     ActivitySigninBinding binding;
@@ -43,9 +33,11 @@ public class SigninActivity extends AppCompatActivity {
 
     String id;
     String pw;
+    String serverId;
+    String serverPw;
 
-    private String pwValidation = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d].{8,15}.$";
-    private String idValidtion = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
+    private String idValidation = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d].{8,15}.$";
+    private String pwValidation = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +53,6 @@ public class SigninActivity extends AppCompatActivity {
         txtPw = binding.editTextTextPassword;
 
 
-        ConnectServer connectServerPost = new ConnectServer();
 
         btnsignin.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -74,10 +65,10 @@ public class SigninActivity extends AppCompatActivity {
                 }
                 else {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
-                    ConnectServer connectServerPost = new ConnectServer();
-                    connectServerPost.requestPost("http://a6af7a6941ee.ngrok.io/api/user", id, pw);
 
-                    goHomeActivity();
+                    ((MainActivity)MainActivity.mcontext).connectServerPost
+                            .requestPost("http://93a969d683bd.ngrok.io/api/user", id, pw);
+                    goMainActivity();
                     //TODO: >> 있으면 토스트 발생 & 안넘어감
                     //Toast.makeText(mcontext, "입력하신 아이디/패스워드가 이미 존재합니다", Toast.LENGTH_LONG).show();
                 }
@@ -98,7 +89,7 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 id = txtId.getText().toString();
-                if(!id.matches(idValidtion) || id.length() == 0 ) {
+                if(!id.matches(idValidation) || id.length() == 0 ) {
                     iderr.setVisibility(View.VISIBLE);
                     idErr = 1;
                 }
@@ -136,34 +127,11 @@ public class SigninActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-    static class ConnectServer{
-        //Client 생성
-        OkHttpClient client = new OkHttpClient();
 
-        public void requestPost(String url, String id, String password){
-
-            //Request Body에 서버에 보낼 데이터 작성
-            RequestBody requestBody = new FormBody.Builder().add("email", id).add("password", password).build();
-
-            //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
-            Request request = new Request.Builder().url(url).post(requestBody).build();
-
-            //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.d("error", "Connect Server Error is " + e.toString());
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    Log.d("aaaa", "Response Body is " + response.body().string());
-                }
-            });
-        }
-
-
-
+    public void goMainActivity() {
+        Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
 }

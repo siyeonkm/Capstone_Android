@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context=".HomeActivity">
 
     <ImageView
@@ -15,14 +16,16 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/topbar" />
 
-    <ImageView
-        android:id="@+id/imageView4"
+    <ImageButton
+        android:id="@+id/button_setting"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="10dp"
+        android:background="@drawable/setting"
         app:layout_constraintStart_toStartOf="@id/imageView3"
         app:layout_constraintTop_toTopOf="@id/imageView3"
-        app:srcCompat="@drawable/setting" />
+        />
+
 
     <TextView
         android:id="@+id/textView3"
@@ -31,7 +34,7 @@
         android:textColor="@color/colorTheme_yellow"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="반갑습니다, 유저님!"
+        android:text="반갑습니다, 유저님! "
         android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@id/imageView3" />
@@ -67,6 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

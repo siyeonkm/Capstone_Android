@@ -2,9 +2,14 @@ package com.example.capstoneblackbox;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -32,8 +37,13 @@ import com.pedro.library.AutoPermissionsListener;
 
 import java.io.File;
 import java.net.URI;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
+
+import static com.example.capstoneblackbox.RecordActivity.recordImpact;
 
 
 public class RecordActivity extends AppCompatActivity implements AutoPermissionsListener {
@@ -46,6 +56,14 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     long mNow;
     Date mDate;
   //  ImageView gallery;
+    private SensorManager sensorManager;
+    private Sensor sensor;
+    private SensorEventListener impactLis;
+    static ArrayList<Long> arr = new ArrayList<>();
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+
+    private static Date startTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +92,14 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
  */
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
         String format_time = mFormat.format(mDate);
 
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
         filename = sdcard + File.separator + format_time + ".mp4";
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        impactLis = new ImpactListener();
 
         record = findViewById(R.id.record);
         record.setOnClickListener(new View.OnClickListener() {
@@ -87,11 +108,16 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
                 if(!recording){
                     record.setText("녹화 중지");
                     recording = true;
+                    sensorManager.registerListener(impactLis, sensor, SensorManager.SENSOR_DELAY_UI);
+                    mNow = System.currentTimeMillis();
+                    startTime = new Date(mNow);
+
                     startRecording();
                 }
                 else{
                     record.setText("녹화 시작");
                     recording = false;
+                    sensorManager.unregisterListener(impactLis);
                     stopRecording();
                     //Uri uri = getUriFromPath(filename);
                     //RequestOptions option1 = new RequestOptions().circleCrop();
@@ -102,8 +128,6 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
             }
         });
-
-
 
         //filename = sdcard + File.separator + "recorded.mp4";
 
@@ -122,6 +146,47 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     }
 
  */
+
+    public static void recordImpact(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
+        long startDateTime = startTime.getTime();
+        Date curDate = new Date();
+
+        try {
+            startTime = dateFormat.parse(dateFormat.format(startTime));
+            curDate = dateFormat.parse(dateFormat.format(curDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long curDateTime = curDate.getTime();
+        long minute = (curDateTime - startDateTime) / 60000;
+        arr.add(minute);
+
+        /*
+        long mNow = System.currentTimeMillis();
+        Date mDate = new Date(mNow);
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+
+        String currentTime = mFormat.format(mDate);
+        StringTokenizer st1 = new StringTokenizer(startTime,"_");
+        StringTokenizer st2 = new StringTokenizer(currentTime,"_");
+        int st1_token[] = new int[6];
+        int st2_token[] = new int[6];
+        int i=0;
+
+        while(st1.hasMoreTokens()){
+            st1_token[i] = Integer.parseInt(st1.nextToken());
+            st2_token[i++] = Integer.parseInt(st2.nextToken());
+        }
+
+        if(st1_token[0] == st2_token[0]){
+
+        }
+
+         */
+
+    }
 
     public void startRecording() {
         if (recorder == null) {
@@ -196,6 +261,19 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     public void onGranted(int requestCode, String[] permissions) {
         //Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        sensorManager.registerListener( impactLis, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        sensorManager.unregisterListener(impactLis);
+    }
+
+
 
 /*
         TedPermission.with(this)
@@ -246,3 +324,4 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
  */
 }
+

@@ -62,8 +62,12 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     static ArrayList<Long> arr = new ArrayList<>();
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
 
-    private static Date startTime;
+    private static long startTime;
+    private static DBOpenHelper mDBOpenHelper;
+    private static String videoName;
 
+    private long backKeyPressedTime = 0;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         String format_time = mFormat.format(mDate);
 
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filename = sdcard + File.separator + format_time + ".mp4";
+        filename = sdcard + File.separator + "magicBox_"+ format_time + ".mp4";
+        videoName = "magicBox_"+ format_time;
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -110,7 +115,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
                     recording = true;
                     sensorManager.registerListener(impactLis, sensor, SensorManager.SENSOR_DELAY_UI);
                     mNow = System.currentTimeMillis();
-                    startTime = new Date(mNow);
+                    startTime = mNow;
 
                     startRecording();
                 }
@@ -130,6 +135,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         });
 
         //filename = sdcard + File.separator + "recorded.mp4";
+        mDBOpenHelper = new DBOpenHelper(this);
+        mDBOpenHelper.open();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
     }
@@ -148,9 +155,10 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
  */
 
     public static void recordImpact(){
+        /*
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
         long startDateTime = startTime.getTime();
-        Date curDate = new Date();
+        Date curDate = new Date(System.currentTimeMillis());
 
         try {
             startTime = dateFormat.parse(dateFormat.format(startTime));
@@ -159,9 +167,13 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
             e.printStackTrace();
         }
 
-        long curDateTime = curDate.getTime();
-        long minute = (curDateTime - startDateTime) / 60000;
-        arr.add(minute);
+         */
+
+        long curDateTime = System.currentTimeMillis();
+        long second = (curDateTime - startTime) / 1000;
+        //arr.add(minute);
+
+        mDBOpenHelper.insertColumn(videoName, second);
 
         /*
         long mNow = System.currentTimeMillis();
@@ -273,7 +285,23 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         sensorManager.unregisterListener(impactLis);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
+        // 2000 milliseconds = 2 seconds
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+            toast.cancel();
+        }
+    }
 
 /*
         TedPermission.with(this)

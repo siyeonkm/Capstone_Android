@@ -5,7 +5,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 import static com.example.capstoneblackbox.RecordActivity.recordImpact;
 
 class ImpactListener implements SensorEventListener {
@@ -35,6 +37,7 @@ class ImpactListener implements SensorEventListener {
                     return;
                 mShakeTime = currentTime;
                 mShakeCount++;
+               // Toast.makeText(RecordActivity.this, "충격 " + mShakeCount, Toast.LENGTH_SHORT).show();
                 Log.d("shake","shake 발생"+ mShakeCount);
                 recordImpact();
             }

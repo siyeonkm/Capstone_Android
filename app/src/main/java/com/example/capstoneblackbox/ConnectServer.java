@@ -2,9 +2,11 @@ package com.example.capstoneblackbox;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -21,12 +23,10 @@ import okhttp3.ResponseBody;
 //서버에 연결해주는 각종 함수들 가짐
 //딱한번 cookiejar생성, 딱하나의 client를 생성함.
 //post 2종류(로그인용, 비디오업로드용), get 한 종류(비디오다운용) 만들어져있음
-public class ConnectServer extends Thread{
+public class ConnectServer {
 
     public final MyCookieJar myCookieJar = new MyCookieJar();
     public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
-
-    public int exist = 0;
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
@@ -58,7 +58,6 @@ public class ConnectServer extends Thread{
                 Log.d("aaaa", "Response Body is " + response.body().string());
             }
         });
-        notify();
     }
 
     public void requestPost(String url, final String id, final String password){
@@ -75,28 +74,27 @@ public class ConnectServer extends Thread{
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 Log.d("error", "Connect Server Error is " + e.toString());
+                Toast.makeText(MainActivity.mcontext, "서버 오류", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 String res = response.body().string();
                 Log.d("aaaa", "Response Body is " + res);
-                synchronized (this) {
-                    if(res.equals("ok")) {
-                        exist = 1;
+                if(res.length()<5) {
+                    ((MainActivity)MainActivity.mcontext).goHomeActivity();
 
-                    }
-                    else{
-                        exist = 0;
-                    }
-                    notify();
+                }
+                else{
+                    Toast.makeText(MainActivity.mcontext, "없는 아이디입니다", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
-    public void requestGet(String url, final List userArr, int fin) {
+    public void requestGet(String url) {
         final String path = MediaStore.Video.Media.EXTERNAL_CONTENT_URI + "/magicbox";
+        final List<UserInfo> userArr = new ArrayList<UserInfo>();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -149,7 +147,6 @@ public class ConnectServer extends Thread{
                 }
             }
         });
-        notify();
     }
 
 

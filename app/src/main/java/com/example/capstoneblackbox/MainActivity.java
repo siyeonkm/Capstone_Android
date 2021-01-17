@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     Realm realm;
 
+    int exist = 0;
+
     int idErr; int pwErr;
 
     public final ConnectServer connectServerPost = new ConnectServer();
@@ -72,28 +74,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                else {
 
-                   //TODO: >> 있으면 넘어감
-                    connectServerPost.start();
-                    connectServerPost.requestPost("http://93a969d683bd.ngrok.io/login", id, pw);
-
-                   synchronized(connectServerPost) {
-                       try {
-                           // b.wait()메소드를 호출.
-                           // 메인쓰레드는 정지
-                           // ThreadB가 5번 값을 더한 후 notify를 호출하게 되면 wait에서 깨어남
-                           System.out.println("b가 완료될때까지 기다립니다.");
-                           connectServerPost.wait();
-                       } catch (InterruptedException e) {
-                           e.printStackTrace();
-                       }
-                   }
-                   if(connectServerPost.exist == 1) {
-                        goHomeActivity();
-                   }
-                   //TODO: 토스트 발생 & 안넘어감
-                   else if (connectServerPost.exist == 0) {
-                       Toast.makeText(mcontext, "없는 아이디입니다. 다시 입력해주세요", Toast.LENGTH_LONG).show();
-                   }
+                   //원래는 requestpost에서는 연결하고 response받는거 까지만 작성하고
+                   //성공여부에 따라서 홈화면으로 이동하는거는 여기서 하도록 작성했었는데
+                   //그러면 connectserver가 response받기도 전에 성공못했다고 판단하고 이동을 안하길래
+                   //requestpost에서 response에 따라 homeactivity로 전환하도록 작성해놓음
+                    connectServerPost.requestPost("http://0e9cf7738bd5.ngrok.io/login", id, pw);
 
                }
             }
@@ -168,5 +153,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SigninActivity.class);
         startActivity(intent);
     }
+
+
 
 }

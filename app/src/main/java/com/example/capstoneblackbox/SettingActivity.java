@@ -9,9 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.capstoneblackbox.databinding.ActivitySettingBinding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.example.capstoneblackbox.MainActivity.mcontext;
 
 //홈화면에서 맨위 왼쪽 바3개(설정) 클릭시 열리는 설정창 >> 마이페이지 정도의 용도로 사용하려고함
@@ -25,7 +22,6 @@ public class SettingActivity extends AppCompatActivity {
     Button logout;
     Button myVid;
 
-    public int fin = 0;
     public String vidpath;
 
 
@@ -41,35 +37,13 @@ public class SettingActivity extends AppCompatActivity {
         myVid = binding.buttonMyVid;
         logout = binding.buttonLogout;
 
-        final List<UserInfo> userArr = new ArrayList<UserInfo>();
-
         myVid.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
                 //데이터 받아와지는지만 확인하려고 이거밖에 안 써놓음
                 ((MainActivity) mcontext).connectServerPost
-                        .requestGet("http://93a969d683bd.ngrok.io/api/full", userArr, fin);
-
-                Thread thread = new Thread();
-                synchronized (thread) {
-                    while(fin==0) {
-                        try {
-                            thread.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                while(fin!=1) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                System.out.println("answer: " + userArr.get(0).getStorage_path());
+                        .requestGet("http://93a969d683bd.ngrok.io/api/full");
 
             }
         });

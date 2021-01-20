@@ -177,7 +177,7 @@ public class ConnectServer {
         client.newCall(request).enqueue(new Callback() {
 
             private File directory = new File(strurl);
-            private File fileToBeDownloaded = new File(directory.getAbsolutePath() + vid_name);
+            File mediaFile;
 
             //비동기 처리를 위해 Callback 구현
             @Override
@@ -199,10 +199,8 @@ public class ConnectServer {
                     byte[] buff = new byte[1024 * 4];
                     long downloaded = 0;
                     long target = response.body().contentLength();
-                    if (!directory.exists())  directory.mkdirs();
-                    fileToBeDownloaded.createNewFile();
-
-                    OutputStream output = new FileOutputStream(fileToBeDownloaded);
+                    mediaFile = new File(strurl + vid_name);
+                    OutputStream output = new FileOutputStream(mediaFile);
 
                     while (true) {
                         int readed = inputStream.read(buff);
@@ -217,7 +215,7 @@ public class ConnectServer {
 
                     output.flush();
                     output.close();
-                    Log.d("notation", "다운완료!");
+                    Log.d("notification", "다운로드완료!");
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -226,6 +224,8 @@ public class ConnectServer {
                         inputStream.close();
                     }
                 }
+
+
             }
 
         });

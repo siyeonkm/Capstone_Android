@@ -1,17 +1,22 @@
 package com.example.capstoneblackbox;
 
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -27,6 +32,8 @@ public class ConnectServer {
 
     public final MyCookieJar myCookieJar = new MyCookieJar();
     public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
+
+    String user_id="";
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
@@ -82,18 +89,26 @@ public class ConnectServer {
                 String res = response.body().string();
                 Log.d("aaaa", "Response Body is " + res);
                 if(res.length()<5) {
+                    user_id = "0" + res.substring(0, res.length()-1);
                     ((MainActivity)MainActivity.mcontext).goHomeActivity();
 
                 }
                 else{
-                    Toast.makeText(MainActivity.mcontext, "없는 아이디입니다", Toast.LENGTH_LONG).show();
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(MainActivity.mcontext, "없는 아이디입니다", Toast.LENGTH_LONG).show();
+                        }
+                    }, 0);
+
                 }
             }
         });
     }
 
     public void requestGet(String url) {
-        final String path = MediaStore.Video.Media.EXTERNAL_CONTENT_URI + "/magicbox";
         final List<UserInfo> userArr = new ArrayList<UserInfo>();
 
         Request request = new Request.Builder()
@@ -149,6 +164,78 @@ public class ConnectServer {
         });
     }
 
+    public void requestVideoGet(String svurl, String strurl, int video_id){
+
+        String vid_name = user_id + "0" + String.valueOf(video_id) + ".mp4";
+        String vid_url = svurl + vid_name;
+
+
+        Request request = new Request.Builder()
+                .url(vid_url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            private File directory = new File(strurl);
+            private File fileToBeDownloaded = new File(directory.getAbsolutePath() + vid_name);
+
+            //비동기 처리를 위해 Callback 구현
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("error + Connect Server Error is " + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Headers responseHeaders = response.headers();
+                for (int i = 0; i < responseHeaders.size(); i++) {
+                    Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                InputStream inputStream = null;
+                try {
+                    inputStream = response.body().byteStream();
+
+                    byte[] buff = new byte[1024 * 4];
+                    long downloaded = 0;
+                    long target = response.body().contentLength();
+                    if (!directory.exists())  directory.mkdirs();
+                    fileToBeDownloaded.createNewFile();
+
+                    OutputStream output = new FileOutputStream(fileToBeDownloaded);
+
+                    while (true) {
+                        int readed = inputStream.read(buff);
+
+                        if (readed == -1) {
+                            break;
+                        }
+                        output.write(buff, 0, readed);
+                        //write buff
+                        downloaded += readed;
+                    }
+
+                    output.flush();
+                    output.close();
+                    Log.d("notation", "다운완료!");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                }
+            }
+
+        });
+
+    }
+
+    private String getFileName(String url) {
+        // url 에서 파일만 자르기
+        return url.substring( url.lastIndexOf('/')+1, url.length() );
+    }
 
 
 }

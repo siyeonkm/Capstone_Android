@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://0e9cf7738bd5.ngrok.io/api/full", videopath, path, size, date, user_id);
+                        .requestPost("http://a329550b0921.ngrok.io/api/full", videopath, path, size, date, user_id);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);

@@ -41,9 +41,16 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                UriToPath u2path = new UriToPath();
+                String real_path = "/storage/emulated/0/Download/";
+
+
                 //데이터 받아와지는지만 확인하려고 이거밖에 안 써놓음
-                ((MainActivity) mcontext).connectServerPost
-                        .requestGet("http://93a969d683bd.ngrok.io/api/full");
+                for(int i=1; i<=3; i++) {
+
+                    ((MainActivity) mcontext).connectServerPost
+                            .requestVideoGet("http://a329550b0921.ngrok.io/input/full", real_path, i);
+                }
 
             }
         });

@@ -108,6 +108,47 @@ public class ConnectServer {
         });
     }
 
+    //같은 아이디인지 확인하는거
+    public void requestSameId(String url, final String id, final String password){
+
+        //Request Body에 서버에 보낼 데이터 작성
+        RequestBody requestBody = new FormBody.Builder().add("email", id)
+                .add("password", password).build();
+
+        //작성한 Request Body와 데이터를 보낼 url을 Request에 붙임
+        Request request = new Request.Builder().url(url).post(requestBody).build();
+
+        //request를 Client에 세팅하고 Server로 부터 온 Response를 처리할 Callback 작성
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                Log.d("error", "Connect Server Error is " + e.toString());
+                Toast.makeText(MainActivity.mcontext, "서버 오류", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                String res = response.body().string();
+                Log.d("aaaa", "Response Body is " + res);
+                if(res.equals("ok")) {
+                    ((SigninActivity)SigninActivity.scontext).goMainActivity();
+
+                }
+                else{
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(MainActivity.mcontext, "이미 존재하는 아이디입니다", Toast.LENGTH_LONG).show();
+                        }
+                    }, 0);
+
+                }
+            }
+        });
+    }
+
     public void requestGet(String url) {
         final List<UserInfo> userArr = new ArrayList<UserInfo>();
 

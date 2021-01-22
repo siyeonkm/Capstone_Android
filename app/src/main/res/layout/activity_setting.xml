@@ -15,14 +15,14 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/topbaropen" />
 
-    <ImageView
-        android:id="@+id/imageView4"
+    <ImageButton
+        android:id="@+id/btnSetting"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="@id/topbar"
         app:layout_constraintTop_toTopOf="@id/topbar"
-        app:srcCompat="@drawable/settingopen" />
+        android:background ="@drawable/settingopen" />
 
     <TextView
         android:id="@+id/textView3"
@@ -38,16 +38,16 @@
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topbar"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:background="@drawable/logo"/>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/txtUserId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -60,26 +60,12 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
 
-    <Button
-        android:id="@+id/button_chgId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="@color/colorTheme_yellow"
-
-        android:textColor="@color/colorTheme_black"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="아이디 변경하기"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/button_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
 
         android:backgroundTint="@color/colorTheme_black"
         android:text="로그아웃"
@@ -104,6 +90,6 @@
         app:layout_constraintBottom_toTopOf="@id/button_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_chgId" />
+        app:layout_constraintTop_toBottomOf="@id/txtUserId" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,6 +54,7 @@ public class SigninActivity extends AppCompatActivity {
 
 
 
+
         btnsignin.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -67,8 +68,7 @@ public class SigninActivity extends AppCompatActivity {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
 
                     ((MainActivity)MainActivity.mcontext).connectServerPost
-                            .requestPost("http://0e9cf7738bd5.ngrok.io/api/user", id, pw);
-                    goMainActivity();
+                            .requestSameId("http://0e9cf7738bd5.ngrok.io/api/user", id, pw);
                     //TODO: >> 있으면 토스트 발생 & 안넘어감
                     //Toast.makeText(mcontext, "입력하신 아이디/패스워드가 이미 존재합니다", Toast.LENGTH_LONG).show();
                 }

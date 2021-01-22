@@ -1,6 +1,5 @@
 package com.example.capstoneblackbox;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,8 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
@@ -64,7 +61,7 @@ public class ImpactActivity extends AppCompatActivity implements AutoPermissions
         Cursor iCursor = mDBopenHelper.selectColumns();
         while(iCursor.moveToNext()){
             String videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
-            long impactTime = iCursor.getLong(iCursor.getColumnIndex(DataBases.CreateDB.ImpactTime));
+            long impactTime = iCursor.getLong(iCursor.getColumnIndex(DataBases.CreateDB.Duration));
 
             if(videoName.equals(string)){
                 arr.add(impactTime);

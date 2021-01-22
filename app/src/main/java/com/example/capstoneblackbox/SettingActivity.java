@@ -1,9 +1,11 @@
 package com.example.capstoneblackbox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +20,7 @@ public class SettingActivity extends AppCompatActivity {
     ActivitySettingBinding binding;
     public static Context stcontext;
 
-    Button chgId;
+    ImageButton setting;
     Button logout;
     Button myVid;
 
@@ -33,9 +35,10 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(view);
         stcontext = this;
 
-        chgId = binding.buttonChgId;
         myVid = binding.buttonMyVid;
         logout = binding.buttonLogout;
+
+        setting = binding.btnSetting;
 
         myVid.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -52,6 +55,25 @@ public class SettingActivity extends AppCompatActivity {
                             .requestVideoGet("http://b049b8cfa4d4.ngrok.io/input/full", real_path, i);
                 }
 
+            }
+        });
+
+        setting.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 

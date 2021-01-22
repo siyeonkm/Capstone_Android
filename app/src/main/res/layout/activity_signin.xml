@@ -34,11 +34,11 @@
             android:id="@+id/text_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorTheme_black"
             android:ems="10"
             android:hint="@string/id_hint"
-            android:backgroundTint="@color/colorTheme_black"
-            android:textColor="@color/colorTheme_black"
             android:inputType="textPersonName"
+            android:textColor="@color/colorTheme_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="390dp" />

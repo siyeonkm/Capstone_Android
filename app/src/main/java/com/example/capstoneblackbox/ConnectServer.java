@@ -215,7 +215,7 @@ public class ConnectServer {
 
                     output.flush();
                     output.close();
-                    Log.d("notification", "다운로드완료!");
+                    Log.d("notification", String.valueOf(video_id) + "번영상 다운로드완료!");
 
                 } catch (IOException e) {
                     e.printStackTrace();

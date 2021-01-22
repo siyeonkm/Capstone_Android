@@ -49,7 +49,7 @@ public class SettingActivity extends AppCompatActivity {
                 for(int i=1; i<=3; i++) {
 
                     ((MainActivity) mcontext).connectServerPost
-                            .requestVideoGet("http://a329550b0921.ngrok.io/input/full", real_path, i);
+                            .requestVideoGet("http://b049b8cfa4d4.ngrok.io/input/full", real_path, i);
                 }
 
             }

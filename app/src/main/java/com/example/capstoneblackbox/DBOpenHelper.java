@@ -51,16 +51,24 @@ public class DBOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn( String videoName, long time){
+    public long insertColumn( String videoName, String duration, int impact){
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.VideoName, videoName);
-        values.put(DataBases.CreateDB.ImpactTime, time);
-        Log.d("삽입","삽입"+videoName+" 시간 "+time);
+        values.put(DataBases.CreateDB.Duration, duration);
+        values.put(DataBases.CreateDB.Impact, impact);
+        Log.d("삽입","삽입"+videoName+" 충격 감지 "+impact+" duration "+duration);
         return mDB.insert(DataBases.CreateDB._TABLENAME0, null, values);
     }
 
     public Cursor selectColumns(){
         return mDB.query(DataBases.CreateDB._TABLENAME0, null, null, null, null, null, null);
+    }
+
+    public void deleteColumn(String videoName) {
+        //return mDB.delete(DataBases.CreateDB._TABLENAME0, "_videoID=" + videoName, null) > 0;
+        mDB.execSQL("DELETE FROM impactTable WHERE videoID = '"+videoName+"';");
+
+    //"DELETE FROM"
     }
 
 

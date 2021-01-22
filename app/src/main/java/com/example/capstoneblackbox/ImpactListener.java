@@ -1,20 +1,21 @@
 package com.example.capstoneblackbox;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import static android.content.Context.CONTEXT_IGNORE_SECURITY;
-import static com.example.capstoneblackbox.RecordActivity.recordImpact;
+import static com.example.capstoneblackbox.RecordActivity.impact;
+import static io.realm.Realm.getApplicationContext;
 
 class ImpactListener implements SensorEventListener {
     private long mShakeTime;
     private static final int SHAKE_SKIP_TIME = 500;
-    private static final float SHAKE_THRESHOLD_GRAVITY = 2.7F;
+    private static final float SHAKE_THRESHOLD_GRAVITY = 2.6F;
     private int mShakeCount = 0;
+     Context context = getApplicationContext();
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -37,9 +38,10 @@ class ImpactListener implements SensorEventListener {
                     return;
                 mShakeTime = currentTime;
                 mShakeCount++;
-               // Toast.makeText(RecordActivity.this, "충격 " + mShakeCount, Toast.LENGTH_SHORT).show();
-                Log.d("shake","shake 발생"+ mShakeCount);
-                recordImpact();
+                Toast.makeText(context, "충격이 발생했습니다", Toast.LENGTH_SHORT).show();
+                //Log.d("shake","shake 발생"+ mShakeCount);
+                impact = 1;
+                //recordImpact();
             }
         }
     }

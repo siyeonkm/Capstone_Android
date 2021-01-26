@@ -19,70 +19,86 @@
         app:layout_constraintTop_toTopOf="parent" >
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/relativeLayout2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
-
-            <ImageView
-                android:id="@+id/videoImage"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_launcher"
-                android:layout_margin="5dp"/>
-
-            <TextView
-                android:id="@+id/videoName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="2dp"
-                android:background="@android:color/white"
-                android:padding="10dp"
-                android:text="TextView"
-                app:layout_constraintStart_toStartOf="@+id/videoImage"
-                app:layout_constraintTop_toBottomOf="@+id/videoImage" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/play"
-                android:drawableTint="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/videoName"
-                app:layout_constraintEnd_toEndOf="@+id/videoImage"
-                app:layout_constraintStart_toStartOf="@+id/videoImage"
-                app:layout_constraintTop_toTopOf="@+id/videoImage" />
+                android:id="@+id/menu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right|top"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/menu" />
 
-            <TextView
-                android:id="@+id/duration"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="10dp"
-                android:background="@android:color/black"
-                android:padding="3dp"
-                android:text="TextView"
-                android:textColor="@android:color/white"
-                android:textSize="11dp"
-                app:layout_constraintBottom_toTopOf="@+id/videoName"
-                app:layout_constraintEnd_toEndOf="@+id/videoImage" />
+                >
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:buttonTint="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/videoImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_margin="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/videoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="2dp"
+                    android:background="@android:color/white"
+                    android:padding="10dp"
+                    android:text="TextView"
+                    app:layout_constraintStart_toStartOf="@+id/videoImage"
+                    app:layout_constraintTop_toBottomOf="@+id/videoImage" />
+
+                <ImageButton
+                    android:id="@+id/play"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/play"
+                    android:drawableTint="#FFFFFF"
+                    app:layout_constraintBottom_toTopOf="@+id/videoName"
+                    app:layout_constraintEnd_toEndOf="@+id/videoImage"
+                    app:layout_constraintStart_toStartOf="@+id/videoImage"
+                    app:layout_constraintTop_toTopOf="@+id/videoImage" />
+
+                <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/black"
+                    android:padding="3dp"
+                    android:text="TextView"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    app:layout_constraintBottom_toTopOf="@+id/videoName"
+                    app:layout_constraintEnd_toEndOf="@+id/videoImage" />
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:buttonTint="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

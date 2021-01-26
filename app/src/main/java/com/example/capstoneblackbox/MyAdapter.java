@@ -5,11 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
     Context context;
     private ArrayList<Video> list = null;
     public OnItemClickListener mOnItemClickListener = null;
+    //public OnItemClickListener mOnMenuClickListener = null;
+
     private int checkBoxFlag=0;
     private int visibility;
     private ArrayList<Boolean> checkboxList;
@@ -33,6 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         void onItemClick(View view, String videoName);
 
     }
+
 /*
     public void setOnItemClickListener(OnItemClickListener listener) {
 
@@ -42,10 +48,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
  */
 
-    public MyAdapter(Context context, ArrayList<Video> list, OnItemClickListener listener){
+    public MyAdapter(Context context, ArrayList<Video> list, OnItemClickListener listener1){
         this.context=context;
         this.list = list;
-        this.mOnItemClickListener = listener;
+        this.mOnItemClickListener = listener1;
+        //this.mOnMenuClickListener = listener2;
         checkboxList = new ArrayList<>();
     }
 
@@ -177,6 +184,37 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             }
         });
 
+
+        holder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup= new PopupMenu(getApplicationContext(), v);//v는 클릭된 뷰를 의미
+                // MenuInflater inf = popup.getMenuInflater();
+
+                popup.getMenuInflater().inflate(R.menu.gallery_item_menu, popup.getMenu());
+                popup.show();//Popup Menu 보이기
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.m1:
+                                String send = (String) holder.videoName.getText();
+                                mOnItemClickListener.onItemClick(v,send);
+                                break;
+
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+
+            }
+        });
+
+
         //if(trash)
          //   holder.checkBox.setVisibility(View.VISIBLE);
         //else
@@ -264,6 +302,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         TextView videoName;
         CheckBox checkBox;
         boolean isChecked = false;
+        ImageButton menu;
 
 
         public ViewHolder(View itemView)
@@ -275,6 +314,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             duration = itemView.findViewById(R.id.duration);
             videoName = itemView.findViewById(R.id.videoName);
             checkBox = itemView.findViewById(R.id.checkBox);
+            menu = itemView.findViewById(R.id.menu);
             /*
             if(visibility==1)
                 checkBox.setVisibility(View.VISIBLE);

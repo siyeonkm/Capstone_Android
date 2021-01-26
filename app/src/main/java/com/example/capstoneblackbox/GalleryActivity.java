@@ -208,7 +208,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
         list = new ArrayList<>();
 
         iCursor = mDBOpenHelper.selectColumns();
-        iCursor.moveToFirst();
+        iCursor.moveToLast();
         /*
         if(!iCursor.moveToNext()){
             novideo.setVisibility(View.VISIBLE);
@@ -216,7 +216,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
 
          */
 
-        while(iCursor.moveToNext()){
+        while(iCursor.moveToPrevious()){
             videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
             duration = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.Duration));
             impact = iCursor.getInt(iCursor.getColumnIndex(DataBases.CreateDB.Impact))>0;
@@ -288,8 +288,18 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
 
     @Override
     public void onItemClick(View view, String videoName) {
+        Intent intent=null;
+        switch (view.getId()){
+            case R.id.play:
+                intent = new Intent(GalleryActivity.this, VideoPlayActivity.class);
+                break;
+            case R.id.menu:
+                intent = new Intent(GalleryActivity.this, RecordScreenActivity.class);
+                break;
+
+        }
 //        MyAdapter.ViewHolder viewHolder = (MyAdapter.ViewHolder)recyclerView.findViewHolderForAdapterPosition(position);
-        Intent intent = new Intent(GalleryActivity.this, VideoPlayActivity.class);
+
         intent.putExtra("videoName", videoName);
        // intent.putExtra("bitmap", bitmap);
         startActivity(intent);
@@ -302,12 +312,10 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
 
     }
 
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(GalleryActivity.this, RecordActivity.class);
         startActivity(intent);
     }
-
-
-
 }

@@ -52,7 +52,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     private Sensor sensor;
     private SensorEventListener impactLis;
     static ArrayList<Long> arr = new ArrayList<>();
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_hh_mm_ss");
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 
     private static long startTime;
     public static DBOpenHelper mDBOpenHelper;

@@ -36,6 +36,7 @@ import com.pedro.library.AutoPermissionsListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class RecordActivity extends AppCompatActivity implements AutoPermissionsListener{
@@ -53,6 +54,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     private SensorEventListener impactLis;
     static ArrayList<Long> arr = new ArrayList<>();
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+    SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
 
     private static long startTime;
     public static DBOpenHelper mDBOpenHelper;
@@ -69,6 +71,9 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     Bitmap bitmap;
     RecordPreview preview;
     TextView speed;
+    TextView timeduration;
+    Calendar cal;
+    String tempTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,15 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
 
  */
+
+        timeduration = findViewById(R.id.timeduration);
+        cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+
+        tempTime = format2.format(cal.getTime());
+        timeduration.setText(tempTime);
 
         preview = new RecordPreview(this);
 
@@ -150,6 +164,32 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
                     //startRecording();
                     //preview.setFilePath(videoName);
                     preview.start(videoName);
+
+                    (new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            while (!Thread.interrupted())
+                                try
+                                {
+                                    Thread.sleep(1000);
+                                    runOnUiThread(new Runnable() // start actions in UI thread
+                                    {
+
+                                        @Override
+                                        public void run()
+                                        {
+                                            timeduration.setText(getCurrentTime());
+                                        }
+                                    });
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    // ooops
+                                }
+                        }
+                    })).start();
                 }
                 else{
                     record.setText("녹화 시작");
@@ -209,6 +249,14 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
+    }
+
+    public String getCurrentTime(){
+        // 1초 더하기
+        cal.add(Calendar.SECOND, 1);
+        tempTime = format2.format(cal.getTime());
+
+        return tempTime;
     }
 
     public static void recordImpact(){

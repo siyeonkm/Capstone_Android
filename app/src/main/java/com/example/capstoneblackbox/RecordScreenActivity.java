@@ -59,7 +59,7 @@ public class RecordScreenActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_MediaProjection = 101;
 
     private MediaProjection mediaProjection;
-    SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");;
+    SimpleDateFormat dayTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

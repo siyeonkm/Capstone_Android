@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
@@ -70,10 +68,11 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
     Bitmap bitmap;
     RecordPreview preview;
-    TextView speed;
+   // TextView speed;
     TextView timeduration;
     Calendar cal;
     String tempTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +105,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
         timeduration = findViewById(R.id.timeduration);
         cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY,0);
-        cal.set(Calendar.MINUTE,0);
-        cal.set(Calendar.SECOND,0);
 
-        tempTime = format2.format(cal.getTime());
-        timeduration.setText(tempTime);
 
         preview = new RecordPreview(this);
 
@@ -128,7 +122,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
             }
         });
 
-        speed = findViewById(R.id.speed);
+       // speed = findViewById(R.id.speed);
 
 /*
         mNow = System.currentTimeMillis();
@@ -149,6 +143,13 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
                 if(!recording){
                     record.setText("녹화 중지");
                     recording = true;
+                    cal.set(Calendar.HOUR_OF_DAY,0);
+                    cal.set(Calendar.MINUTE,0);
+                    cal.set(Calendar.SECOND,0);
+
+                    tempTime = format2.format(cal.getTime());
+                    timeduration.setText(tempTime);
+                    timeduration.setVisibility(TextView.VISIBLE);
 
                     sensorManager.registerListener(impactLis, sensor, SensorManager.SENSOR_DELAY_UI);
 
@@ -217,6 +218,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
                         duration+=second;
 
                     stopRecording();
+                    timeduration.setVisibility(TextView.GONE);
                     Toast.makeText(getApplicationContext(),"저장이 완료됐습니다", Toast.LENGTH_SHORT).show();
 
                 }
@@ -348,7 +350,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         Intent intent = new Intent(RecordActivity.this, HomeActivity.class);
         startActivity(intent);
     }
-
+/*
     LocationListener locationListener = new LocationListener() {
 
         // onLocationChanged는 위치 변화가 생기면 자동으로 호출되는 메서드이다.
@@ -365,6 +367,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
             }
         }
 
+
+
         @Override
         public void onProviderDisabled(String provider) {
         }
@@ -378,6 +382,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         }
 
     };
+
+ */
 
 
 /*

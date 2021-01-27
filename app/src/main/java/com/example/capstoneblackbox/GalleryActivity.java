@@ -208,7 +208,41 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
         list = new ArrayList<>();
 
         iCursor = mDBOpenHelper.selectColumns();
-        iCursor.moveToLast();
+        if(iCursor.moveToLast()){
+            videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
+            duration = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.Duration));
+            impact = iCursor.getInt(iCursor.getColumnIndex(DataBases.CreateDB.Impact))>0;
+            videoPath = sdcard + File.separator + videoName + ".mp4";
+            thumbnail = null;
+
+            File files = new File(videoPath);
+            //파일 유무를 확인
+            if(!files.exists()) {
+                //파일이 없을시
+                Log.d("확인","비디오 없음"+videoName);
+                mDBOpenHelper.deleteColumn(videoName);
+
+            }
+            else{
+                try {
+                    // 썸네일 추출후 리사이즈해서 다시 비트맵 생성
+                    Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                    thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 1000,800);
+                    // thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 1000,800);
+                    if(!impact)
+                        button = R.drawable.play;
+                    else
+                        button = R.drawable.play_impact;
+
+                    list.add(new Video(thumbnail, videoName, button, duration));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("db 읽기","못 가져와 : "+videoName);
+                }
+            }
+
+        }
         /*
         if(!iCursor.moveToNext()){
             novideo.setVisibility(View.VISIBLE);

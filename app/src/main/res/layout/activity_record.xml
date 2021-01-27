@@ -42,26 +42,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:text="0"
-            android:textColor="#FFEB3B"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="Km/h"
-            android:textColor="#FFEB3B"
-            android:textSize="20dp"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/timeduration"
@@ -72,7 +52,9 @@
             android:layout_weight="1"
             android:textColor="#FFEB3B"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="00:00:00"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <ImageButton

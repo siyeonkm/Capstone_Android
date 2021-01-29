@@ -34,6 +34,8 @@ public class ConnectServer {
     public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
 
     String user_id="";
+    public boolean downloadExist = true;
+    public int vidnum = 1;
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
@@ -205,71 +207,98 @@ public class ConnectServer {
         });
     }
 
-    public void requestVideoGet(String svurl, String strurl, int video_id){
+    public void requestVideoGet(String svurl, String stroage_url){
+        vidnum = 1;
+        downloadExist = true;
 
-        String vid_name = user_id + "0" + String.valueOf(video_id) + ".mp4";
-        String vid_url = svurl + vid_name;
+        //while문을 돌면서 0701.mp4, 0702.mp4 ... url에 접속해서 영상 다운받음
+        //while문 끝나는 법 >> 영상이 3개면 0703까지일테니까 0704.mp4 url 접속 시도 시 onFailure될것임 그때 while문을 빠져나옴
+        while(downloadExist) {
+            //비디오의 url 만드는 부분
+            //ex) 0701, 0702 ...
+            String vid_name = user_id + "0" + String.valueOf(vidnum) + ".mp4";
+            String vid_url = svurl + vid_name;
 
+            Request request = new Request.Builder()
+                    .url(vid_url)
+                    .build();
 
-        Request request = new Request.Builder()
-                .url(vid_url)
-                .build();
+            client.newCall(request).enqueue(new Callback() {
 
-        client.newCall(request).enqueue(new Callback() {
+                private File directory = new File(stroage_url);
+                File mediaFile;
 
-            private File directory = new File(strurl);
-            File mediaFile;
-
-            //비동기 처리를 위해 Callback 구현
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("error + Connect Server Error is " + e.toString());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                //비동기 처리를 위해 Callback 구현
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("error + Connect Server Error is " + e.toString());
+                    downloadExist = false;
                 }
 
-                InputStream inputStream = null;
-                try {
-                    inputStream = response.body().byteStream();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0; i < responseHeaders.size(); i++) {
+                        Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
 
-                    byte[] buff = new byte[1024 * 4];
-                    long downloaded = 0;
-                    long target = response.body().contentLength();
-                    mediaFile = new File(strurl + vid_name);
-                    OutputStream output = new FileOutputStream(mediaFile);
+                    if (!this.directory.exists()) {
+                        this.directory.mkdirs();
+                    }
+                    InputStream inputStream = null;
 
-                    while (true) {
-                        int readed = inputStream.read(buff);
+                    try {
+                        inputStream = response.body().byteStream();
 
-                        if (readed == -1) {
-                            break;
+                        byte[] buff = new byte[1024 * 4];
+                        long downloaded = 0;
+                        long target = response.body().contentLength();
+                        mediaFile = new File(stroage_url + vid_name);
+
+                        if (this.mediaFile.exists()) {
+                            this.mediaFile.delete();
                         }
-                        output.write(buff, 0, readed);
-                        //write buff
-                        downloaded += readed;
-                    }
 
-                    output.flush();
-                    output.close();
-                    Log.d("notification", String.valueOf(video_id) + "번영상 다운로드완료!");
+                        OutputStream output = new FileOutputStream(mediaFile);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
+                        while (true) {
+                            int readed = inputStream.read(buff);
+
+                            if (readed == -1) {
+                                break;
+                            }
+                            output.write(buff, 0, readed);
+                            //write buff
+                            downloaded += readed;
+                        }
+
+                        output.flush();
+                        output.close();
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(MainActivity.mcontext, String.valueOf(vidnum) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
+                            }
+                        }, 0);
+                        ++vidnum;
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (inputStream != null) {
+                            inputStream.close();
+                        }
                     }
                 }
+            });
+        }//while문 끝
+        ((PopupActivity)PopupActivity.pcontext).goAbnormAct();
 
 
-            }
 
-        });
+
 
     }
 

@@ -122,12 +122,6 @@ public class SigninActivity extends AppCompatActivity {
         });
     }
 
-    public void goHomeActivity() {
-        Intent intent = new Intent(SigninActivity.this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
     public void goMainActivity() {
         Intent intent = new Intent(SigninActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

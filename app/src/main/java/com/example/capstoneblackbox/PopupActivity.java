@@ -9,8 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
 import com.example.capstoneblackbox.databinding.ActivityPopupBinding;
+
+import static com.example.capstoneblackbox.MainActivity.mcontext;
 
 public class PopupActivity extends Activity {
     ActivityPopupBinding binding;
@@ -41,8 +42,13 @@ public class PopupActivity extends Activity {
         btnAbnorm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PopupActivity.this, AbnormalActivity.class );
-                startActivity(intent);
+                UriToPath u2path = new UriToPath();
+
+                //매직박스만의 폴더
+                String real_path = "/storage/emulated/0/MagicBox/";
+
+                ((MainActivity) mcontext).connectServerPost
+                        .requestVideoGet("http://b049b8cfa4d4.ngrok.io/output", real_path);
             }
         });
 
@@ -61,6 +67,11 @@ public class PopupActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void goAbnormAct() {
+        Intent intent = new Intent(PopupActivity.this, AbnormalActivity.class );
+        startActivity(intent);
     }
 
 }

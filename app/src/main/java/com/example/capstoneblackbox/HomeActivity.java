@@ -27,18 +27,17 @@ public class HomeActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;
     private Toast toast;
 
-    private static final int PICK_FROM_ALBUM = 1;
-
     ImageButton btnvideo;
     ImageButton btncrop;
     ImageButton btnsetting;
+
+    private static final int PICK_FROM_ALBUM = 1;
 
     String date = "2021-01-01 12:30:01";
     String size = "1000";
     String path = "/uploads/test.mp4";
     int user_id = 2;
     String videopath;
-
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -55,31 +54,26 @@ public class HomeActivity extends AppCompatActivity {
         btnsetting = binding.buttonSetting;
 
         tedPermission();
-        goToAlbum();
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-                ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://b049b8cfa4d4.ngrok.io/api/input", videopath, path, size, date, user_id);
-
                 //기본 카메라 연결
-                /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
                    startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
-                }*/
+                }
 
-                //Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
-                //startActivity(intent);
+                Intent intent = new Intent(HomeActivity.this, RecordActivity.class );
+                startActivity(intent);
             }
         });
 
         btncrop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
-                startActivity(intent);
+                goToAlbum();
             }
         });
 
@@ -156,5 +150,8 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         }
+        Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
+        startActivity(intent);
     }
+
 }

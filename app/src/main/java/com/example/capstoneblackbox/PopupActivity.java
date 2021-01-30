@@ -21,6 +21,14 @@ public class PopupActivity extends Activity {
     Button btnImpact;
     Button btnUser;
 
+    private static final int PICK_FROM_ALBUM = 1;
+
+    String date = "2021-01-01 12:30:01";
+    String size = "1000";
+    String path = "/uploads/test.mp4";
+    int user_id = 2;
+    String videopath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +50,13 @@ public class PopupActivity extends Activity {
         btnAbnorm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                UriToPath u2path = new UriToPath();
+                videopath = ((HomeActivity)HomeActivity.hcontext).videopath;
 
-                //매직박스만의 폴더
-                String real_path = "/storage/emulated/0/MagicBox/";
+                ((MainActivity)MainActivity.mcontext).connectServerPost
+                        .requestPost("http://b049b8cfa4d4.ngrok.io/api/input", videopath, path, size, date, user_id);
 
                 ((MainActivity) mcontext).connectServerPost
-                        .requestVideoGet("http://b049b8cfa4d4.ngrok.io/output", real_path);
+                        .requestVideoGet("http://b049b8cfa4d4.ngrok.io/output", "/storage/emulated/0/MagicBox/");
             }
         });
 

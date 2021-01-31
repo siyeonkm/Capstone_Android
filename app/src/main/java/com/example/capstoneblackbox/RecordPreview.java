@@ -1,5 +1,6 @@
 package com.example.capstoneblackbox;
 
+import android.Manifest;
 import android.content.Context;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -8,13 +9,20 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import static io.realm.Realm.getApplicationContext;
 
 public class RecordPreview extends SurfaceView implements SurfaceHolder.Callback {
     MediaRecorder recorder = null;
@@ -32,14 +40,46 @@ public class RecordPreview extends SurfaceView implements SurfaceHolder.Callback
 
     public RecordPreview(Context context){
         super(context);
+
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
 
+        //tedPermission();
+        //AutoPermissions.Companion.loadAllPermissions(getActivity(), 101);
 
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         camera = Camera.open();
 
        prepareRecording();
+
+    }
+
+    public void tedPermission() {
+
+        PermissionListener permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                // 권한 요청 성공
+                Toast.makeText(getApplicationContext(), "권한 성공", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                // 권한 요청 실패
+                Toast.makeText(getApplicationContext(), "권한 거부", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        TedPermission.with(getApplicationContext())
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("권한 필요")
+                .setDeniedMessage("거부..")
+                .setPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CAMERA})
+                .check();
 
     }
 
@@ -79,6 +119,7 @@ public class RecordPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
+
         if(camera != null){
             Camera.Parameters params = camera.getParameters();
             camera.setParameters(params);
@@ -154,7 +195,7 @@ public class RecordPreview extends SurfaceView implements SurfaceHolder.Callback
             recorder.prepare();
         }
         catch (Exception e) {
-            Log.d("error", "에러 발생");
+            Log.d("error", "prepare 에러 발생");
             e.printStackTrace();
         }
         recorder.start();
@@ -169,5 +210,7 @@ public class RecordPreview extends SurfaceView implements SurfaceHolder.Callback
 
 
     }
+
+
 
 }

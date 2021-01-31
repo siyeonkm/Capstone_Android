@@ -179,7 +179,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
         buttonClicked(0);
         if(list.size()==0){
             recyclerView.setVisibility(View.GONE);
-            novideo.setVisibility(View.VISIBLE);
+//            novideo.setVisibility(TextView.VISIBLE);
         }
     }
 

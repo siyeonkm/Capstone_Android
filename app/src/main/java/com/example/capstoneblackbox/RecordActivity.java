@@ -1,11 +1,15 @@
 package com.example.capstoneblackbox;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -13,11 +17,13 @@ import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,19 +31,28 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RecordActivity extends AppCompatActivity implements AutoPermissionsListener{
+import static android.Manifest.permission.CAMERA;
+
+public class RecordActivity extends AppCompatActivity implements SurfaceHolder.Callback, AutoPermissionsListener {
     //Camera camera;
     MediaRecorder recorder=null;
     String filename;
@@ -67,21 +82,29 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     String format_time;
     String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
     Bitmap bitmap;
-    RecordPreview preview;
+    //RecordPreview preview;
    // TextView speed;
     TextView timeduration;
     Calendar cal;
     String tempTime;
+    Camera camera;
+    SurfaceHolder surfaceHolder;
+    private final int MT_PERMISSION_REQUEST_CODE = 1001;
+    private boolean has;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_record);
 
-        //SurfaceView surface = new SurfaceView(this);
+        //tedPermission();
+        AutoPermissions.Companion.loadAllPermissions(this, 101);
+
+
         //holder = surface.getHolder();
         //holder.addCallback(this);
        // holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -105,12 +128,54 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
         timeduration = findViewById(R.id.timeduration);
         cal = Calendar.getInstance();
+        //tedPermission();
+
+        //preview = new RecordPreview(this);
 
 
-        preview = new RecordPreview(this);
+        //tedPermission();
+        //AutoPermissions.Companion.loadAllPermissions(getActivity(), 101);
 
+        final int MY_PERMISSION_REQUEST_CODE = 100;
+
+        int APIVersion = android.os.Build.VERSION.SDK_INT;
+
+        if (APIVersion >= android.os.Build.VERSION_CODES.M) {
+
+            if (checkCAMERAPermission()) {  //이미 권한이 허가되어 있는지 확인한다. (표.1 로 구현)
+
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);  //카메라를 open() 할 수 있다.
+
+            } else {  //카메라 권한을 요청한다.
+
+                ActivityCompat.requestPermissions(this, new String[]{CAMERA}, MY_PERMISSION_REQUEST_CODE);
+
+            }
+
+        }
+
+        SurfaceView surface = new SurfaceView(this);
+        surfaceHolder = surface.getHolder();
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         ConstraintLayout layout = findViewById(R.id.container);
-        layout.addView(preview);
+        //layout.addView(preview);
+        layout.addView(surface);
+
+        //camera = Camera.open();
+        //prepareRecording();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1002);
+
+        } else {
+
+            //startRecording();
+            prepareRecording();
+        }
+
+
 
         gallery =findViewById(R.id.gallery);
         gallery.setOnClickListener(new View.OnClickListener(){
@@ -135,6 +200,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         impactLis = new ImpactListener();
+
 
         record = findViewById(R.id.record);
         record.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +230,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
 
                     //startRecording();
                     //preview.setFilePath(videoName);
-                    preview.start(videoName);
+                    //preview.start(videoName);
+                    start(videoName);
 
                     (new Thread(new Runnable()
                     {
@@ -225,13 +292,18 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
             }
         });
 
+        galleryThumbnail();
+    }
+
+    private void galleryThumbnail(){
         mDBOpenHelper = new DBOpenHelper(this);
         mDBOpenHelper.open();
 
         Cursor iCursor = mDBOpenHelper.selectColumns();
-        iCursor.moveToFirst();
+        has = iCursor.moveToFirst();
+        if(has) {
 
-        if(iCursor.moveToNext()){
+
             String name = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
             String tmpVideoPath = sdcard + File.separator + name + ".mp4";
             Bitmap thumbnail = null;
@@ -239,18 +311,22 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
             try {
                 // 썸네일 추출후 리사이즈해서 다시 비트맵 생성
                 bitmap = ThumbnailUtils.createVideoThumbnail(tmpVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-                thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 190,160);
+                thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 190, 160);
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
             gallery.setImageBitmap(thumbnail);
         }
+    }
 
+    private boolean checkCAMERAPermission() {
 
-        AutoPermissions.Companion.loadAllPermissions(this, 101);
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
+
+        return result == PackageManager.PERMISSION_GRANTED;
+
     }
 
     public String getCurrentTime(){
@@ -261,9 +337,11 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         return tempTime;
     }
 
-    public static void recordImpact(){
-        mDBOpenHelper.insertColumn(videoName, duration,impact);
+    public void recordImpact(){
+        mDBOpenHelper.insertColumn(videoName, duration, impact);
         impact = 0;
+        if(!has)
+            galleryThumbnail();
     }
 
     public void startRecording() {
@@ -294,7 +372,8 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     }
 
     public void stopRecording() {
-        preview.stop();
+        //preview.stop();
+        stop();
 
         ContentValues values = new ContentValues(10);
 
@@ -317,22 +396,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         //preview.previewMaintain();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[],
-                                           int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this);
-    }
 
-    @Override
-    public void onDenied(int requestCode, String[] permissions) {
-       // Toast.makeText(this, "permissions denied : " + permissions.length, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onGranted(int requestCode, String[] permissions) {
-        //Toast.makeText(this, "permissions granted : " + permissions.length, Toast.LENGTH_LONG).show();
-    }
     @Override
     protected void onResume(){
         super.onResume();
@@ -350,6 +414,223 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
         Intent intent = new Intent(RecordActivity.this, HomeActivity.class);
         startActivity(intent);
     }
+
+    public void tedPermission() {
+
+        PermissionListener permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                // 권한 요청 성공
+                Toast.makeText(RecordActivity.this,"권한 성공",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                // 권한 요청 실패
+                Toast.makeText(RecordActivity.this, "권한 거부", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        TedPermission.with(getApplicationContext())
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage(getResources().getString(R.string.permission_2))
+                .setDeniedMessage(getResources().getString(R.string.permission_1))
+                .setPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CAMERA})
+                .check();
+
+    }
+
+    public void prepareRecording(){
+        if (recorder == null) {
+            recorder = new MediaRecorder();
+
+            //camera = Camera.open();
+            //recorder.setCamera(camera);
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+        /*
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
+
+        recorder.setVideoSize(320,240);
+        recorder.setVideoFrameRate(15);
+
+         */
+            recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+        }
+    }
+
+    @Override
+    public void onDenied(int i, String[] strings) {
+
+    }
+
+    @Override
+    public void onGranted(int i, String[] strings) {
+        //prepareRecording();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            switch (requestCode) {      // 권한 요청을 여러가지 했을 경우를 대비해 switch문으로 묶어 관리한다.
+                case MT_PERMISSION_REQUEST_CODE:    //권한 요청시 전달했던 '권한 요청'에 대한 식별 코드
+                    if (grantResults.length > 0) {
+                        boolean cameraAccepted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);  //권한을 허가받았는지 boolean값으로 저장한다.
+                        if (cameraAccepted) {
+
+
+                            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);  //카메라를 open() 할 수 있다.
+
+
+                        }
+                        else { //권한 승인을 거절당했다. ㅠ
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (shouldShowRequestPermissionRationale(CAMERA)) {  //이 함수는 권한 요청을 실행한 적이 있고, 사용자가 이를 거절했을 때 true를 리턴한다.
+
+
+                                    showMessagePermission("권한 허가를 요청합니다~ 문구",   //표.2 로 구현
+
+
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                        requestPermissions(new String[]{CAMERA}, MT_PERMISSION_REQUEST_CODE);  //1)에서 요청했던 함수와 동일
+                                                    }
+                                                }
+                                            });
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+
+                    break;
+                case 1002:
+                    if (grantResults.length > 0) {
+                        boolean cameraAccepted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);  //권한을 허가받았는지 boolean값으로 저장한다.
+                        if (cameraAccepted) {
+
+                            prepareRecording();
+                           // camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);  //카메라를 open() 할 수 있다.
+
+
+                        }
+                        else { //권한 승인을 거절당했다. ㅠ
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (shouldShowRequestPermissionRationale(CAMERA)) {  //이 함수는 권한 요청을 실행한 적이 있고, 사용자가 이를 거절했을 때 true를 리턴한다.
+
+
+                                    showMessagePermission("권한 허가를 요청합니다~ 문구",   //표.2 로 구현
+
+
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1002);  //1)에서 요청했던 함수와 동일
+                                                    }
+                                                }
+                                            });
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+
+            }
+
+
+        AutoPermissions.Companion.parsePermissions(this, requestCode, permissions, this);
+       // Toast.makeText(this, "requestCode : "+requestCode+"  permissions : "+permissions+"  grantResults :"+grantResults, Toast.LENGTH_SHORT).show();
+    }
+    private void showMessagePermission(String message, DialogInterface.OnClickListener okListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+
+                .setMessage(message)
+
+                .setPositiveButton("허용", okListener)
+
+                .setNegativeButton("거부", null)
+
+                .create()
+
+                .show();
+
+    }
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        if(camera != null){
+            Camera.Parameters params = camera.getParameters();
+            camera.setParameters(params);
+            try{
+                camera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            camera.startPreview();
+        }
+        //prepareRecording();
+        //filename = sdcard + File.separator + "magicBox_"+ "videotest1" + ".mp4";
+        //recorder.setOutputFile(filename);
+        recorder.setPreviewDisplay(holder.getSurface());
+
+        try {
+            recorder.prepare();
+        }
+        catch (Exception e) {
+            Log.d("error", "에러 발생");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+
+    }
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+    public void start(String videoName){
+        filename = sdcard + File.separator + videoName + ".mp4";
+        //camera.unlock();
+        prepareRecording();
+        recorder.setOutputFile(filename);
+        recorder.setPreviewDisplay(surfaceHolder.getSurface());
+        try {
+            recorder.prepare();
+        }
+        catch (Exception e) {
+            Log.d("error", "prepare 에러 발생");
+            e.printStackTrace();
+        }
+        recorder.start();
+    }
+
+    public void stop(){
+        recorder.stop();
+        recorder.reset();
+        recorder.release();
+        recorder = null;
+        //camera.lock();
+
+
+    }
+
 /*
     LocationListener locationListener = new LocationListener() {
 
@@ -503,5 +784,7 @@ public class RecordActivity extends AppCompatActivity implements AutoPermissions
     }
 
  */
+
+
 }
 

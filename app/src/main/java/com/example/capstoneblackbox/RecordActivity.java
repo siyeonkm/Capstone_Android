@@ -300,10 +300,8 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
         mDBOpenHelper.open();
 
         Cursor iCursor = mDBOpenHelper.selectColumns();
-        has = iCursor.moveToFirst();
+        has = iCursor.moveToLast();
         if(has) {
-
-
             String name = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
             String tmpVideoPath = sdcard + File.separator + name + ".mp4";
             Bitmap thumbnail = null;
@@ -606,7 +604,7 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
         this.camera = camera;
     }
     public void start(String videoName){
-        filename = sdcard + File.separator + videoName + ".mp4";
+        filename = sdcard + File.separator + "Download/"+ videoName + ".mp4";
         //camera.unlock();
         prepareRecording();
         recorder.setOutputFile(filename);

@@ -157,7 +157,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             //query = String.format("DELETE FROM list WHERE imagePath='%s' and name='%s' and phone='%s';", datas[0],datas[1], datas[2]);
             //db.execSQL(query);
 
-           String tempFilePath = sdcard+ File.separator +tempName+".mp4";
+           String tempFilePath = sdcard+ File.separator +"Download/"+tempName+".mp4";
            File file = new File(tempFilePath);
            if( file.exists() ) {
                if(file.delete()){
@@ -212,7 +212,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
             duration = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.Duration));
             impact = iCursor.getInt(iCursor.getColumnIndex(DataBases.CreateDB.Impact))>0;
-            videoPath = sdcard + File.separator + videoName + ".mp4";
+            videoPath = sdcard + File.separator + "Download/"+videoName + ".mp4";
             thumbnail = null;
 
             File files = new File(videoPath);
@@ -254,7 +254,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
             duration = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.Duration));
             impact = iCursor.getInt(iCursor.getColumnIndex(DataBases.CreateDB.Impact))>0;
-            videoPath = sdcard + File.separator + videoName + ".mp4";
+            videoPath = sdcard + File.separator + "Download/"+videoName + ".mp4";
             thumbnail = null;
 
             File files = new File(videoPath);

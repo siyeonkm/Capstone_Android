@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -38,8 +39,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
@@ -224,7 +223,7 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
                     mDate = new Date(startTime);
                     format_time = mFormat.format(mDate);
 
-                    filename = sdcard + File.separator + "magicBox_"+ format_time + ".mp4";
+                    filename = sdcard + File.separator + "Download/MagicBox/"+ "magicBox_"+ format_time + ".mp4";
                     videoName = "magicBox_"+ format_time;
                     //recorder.setOutputFile(videoName);
 
@@ -298,17 +297,26 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
     private void galleryThumbnail(){
         mDBOpenHelper = new DBOpenHelper(this);
         mDBOpenHelper.open();
-
+        //has = false;
         Cursor iCursor = mDBOpenHelper.selectColumns();
         has = iCursor.moveToLast();
         if(has) {
             String name = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
-            String tmpVideoPath = sdcard + File.separator + name + ".mp4";
+            String tmpVideoPath = filename = sdcard + File.separator + "Download/MagicBox/"+ name + ".mp4";
             Bitmap thumbnail = null;
 
             try {
                 // 썸네일 추출후 리사이즈해서 다시 비트맵 생성
-                bitmap = ThumbnailUtils.createVideoThumbnail(tmpVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+                //bitmap = ThumbnailUtils.createVideoThumbnail(tmpVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    File file = new File(tmpVideoPath);
+                    bitmap = ThumbnailUtils.createVideoThumbnail(file,new Size(120,120), null);
+                }
+                else{
+                    bitmap = ThumbnailUtils.createVideoThumbnail(tmpVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+
+                }
                 thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 190, 160);
 
             } catch (Exception e) {
@@ -342,32 +350,6 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
             galleryThumbnail();
     }
 
-    public void startRecording() {
-        if (recorder == null) {
-            recorder = new MediaRecorder();
-        }
-
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-
-        //recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        //recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-        //recorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-        recorder.setOutputFile(filename);
-
-        recorder.setPreviewDisplay(holder.getSurface());
-
-        try {
-            recorder.prepare();
-            recorder.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            recorder.release();
-            recorder = null;
-        }
-    }
 
     public void stopRecording() {
         //preview.stop();
@@ -413,33 +395,6 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
         startActivity(intent);
     }
 
-    public void tedPermission() {
-
-        PermissionListener permissionListener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                // 권한 요청 성공
-                Toast.makeText(RecordActivity.this,"권한 성공",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                // 권한 요청 실패
-                Toast.makeText(RecordActivity.this, "권한 거부", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        TedPermission.with(getApplicationContext())
-                .setPermissionListener(permissionListener)
-                .setRationaleMessage(getResources().getString(R.string.permission_2))
-                .setDeniedMessage(getResources().getString(R.string.permission_1))
-                .setPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA})
-                .check();
-
-    }
 
     public void prepareRecording(){
         if (recorder == null) {
@@ -604,8 +559,18 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
         this.camera = camera;
     }
     public void start(String videoName){
-        filename = sdcard + File.separator + "Download/"+ videoName + ".mp4";
+        String dir = sdcard + File.separator + "Download/MagicBox/";
+        filename = dir+ videoName + ".mp4";
         //camera.unlock();
+        File storeDirectory = new File(dir);
+        if (!storeDirectory.exists()) {
+            boolean success = storeDirectory.mkdirs();
+            if (!success) {
+                Log.e("TAG", "failed to create file storage directory.");
+                //stopSelf();
+            }
+        }
+
         prepareRecording();
         recorder.setOutputFile(filename);
         recorder.setPreviewDisplay(surfaceHolder.getSurface());

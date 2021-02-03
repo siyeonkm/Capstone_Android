@@ -1,5 +1,6 @@
 package com.example.capstoneblackbox;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -24,6 +25,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+
+import static io.realm.Realm.getApplicationContext;
 
 //서버에 연결해주는 각종 함수들 가짐
 //딱한번 cookiejar생성, 딱하나의 client를 생성함.
@@ -209,7 +212,7 @@ public class ConnectServer {
         });
     }
 
-    public void requestVideoGet(String svurl, String stroage_url){
+    public void requestVideoGet(String svurl){
         currVid = 1;
         nextVid = currVid;
         downloadExist = true;
@@ -253,7 +256,16 @@ public class ConnectServer {
                     byte[] buff = new byte[1024 * 4];
                     long downloaded = 0;
                     long target = response.body().contentLength();
-                    mediaFile = new File(stroage_url + vid_name);
+
+                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBox";
+                    File dirFile = new File(dir);
+
+                    //매직박스용 외부저장소 폴더 생성
+                    if(!dirFile.exists()) {
+                        dirFile.mkdirs();
+                    }
+
+                    mediaFile = new File(dir + "/" + vid_name);
 
                     if (this.mediaFile.exists()) {
                         this.mediaFile.delete();
@@ -290,22 +302,11 @@ public class ConnectServer {
                         inputStream.close();
                     }
                 }
+                //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
+                MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
+                ((AbnormalActivity)AbnormalActivity.abcontext).goToAlbum();
             }
         });
-        /*while(downloadExist) {
-
-        }*/
-
-
-
-
 
     }
-
-    private String getFileName(String url) {
-        // url 에서 파일만 자르기
-        return url.substring( url.lastIndexOf('/')+1, url.length() );
-    }
-
-
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.capstoneblackbox">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RecordScreenActivity"></activity>
+        <activity android:name=".AbnormVideoActivity"></activity>
+        <activity android:name=".RecordScreenActivity" />
         <activity android:name=".LoadingActivity" />
         <activity android:name=".VideoPlayActivity" />
         <activity android:name=".GalleryActivity" />

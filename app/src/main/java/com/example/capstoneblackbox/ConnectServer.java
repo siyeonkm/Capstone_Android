@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,7 +35,7 @@ import static io.realm.Realm.getApplicationContext;
 public class ConnectServer {
 
     public final MyCookieJar myCookieJar = new MyCookieJar();
-    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
+    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).connectTimeout(30, TimeUnit.MINUTES).build();
 
     String user_id="";
     public boolean downloadExist = true;
@@ -304,7 +305,16 @@ public class ConnectServer {
                 }
                 //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
                 MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
-                ((AbnormalActivity)AbnormalActivity.abcontext).goToAlbum();
+                Handler mHandler = new Handler(Looper.getMainLooper());
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 사용하고자 하는 코드
+                        Toast.makeText(MainActivity.mcontext, "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_LONG).show();
+                    }
+                }, 0);
+                ((AbnormalActivity)AbnormalActivity.abcontext).fromAbtoHomeActivity();
+
             }
         });
 

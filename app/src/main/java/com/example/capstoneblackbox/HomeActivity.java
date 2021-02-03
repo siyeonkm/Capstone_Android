@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import com.example.capstoneblackbox.databinding.ActivityHomeBinding;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.CAMERA;
@@ -56,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_MULTI = 1005;
     ArrayList<String> permissions;
 
+    int APIVersion = android.os.Build.VERSION.SDK_INT;
+
     static final int REQUEST_VIDEO_CAPTURE = 1;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -70,15 +72,30 @@ public class HomeActivity extends AppCompatActivity {
         btncrop = binding.cropButton;
         btnsetting = binding.buttonSetting;
 
-        //tedPermission();
-        //goToAlbum();
+        if (APIVersion >= android.os.Build.VERSION_CODES.M) {
+            if(hasPermissions()) {
+                File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/MagicBox");
+                if(!dir.exists()) {
+                    boolean wasSuccessful = dir.mkdirs();
+                    if (!wasSuccessful) {
+                        System.out.println("file: was not successful.");
+                    } else {
+                        System.out.println("file: 최초로 앨범파일만듬.");
+                    }
+                } else {
+                    System.out.println("file "+"already exists");
+                }
+            }
+            else {
+                String[] reqPermissionArray = new String[permissions.size()];
+                reqPermissionArray = permissions.toArray(reqPermissionArray);
+                ActivityCompat.requestPermissions(HomeActivity.this, reqPermissionArray, MY_PERMISSIONS_REQUEST_MULTI);
+            }
+        }
 
         btnvideo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-               // ((MainActivity)MainActivity.mcontext).connectServerPost
-                //        .requestPost("http://b049b8cfa4d4.ngrok.io/api/input", videopath, path, size, date, user_id);
 
                 //기본 카메라 연결
                 /*Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -88,8 +105,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 final int MY_PERMISSION_REQUEST_CODE = 100;
 
-                int APIVersion = android.os.Build.VERSION.SDK_INT;
-
+                APIVersion = android.os.Build.VERSION.SDK_INT;
 
                 if (APIVersion >= android.os.Build.VERSION_CODES.M) {
                     if(hasPermissions()){
@@ -191,29 +207,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void goToAlbum() {
-
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("video/*");
-        startActivityForResult(intent, PICK_FROM_ALBUM);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_FROM_ALBUM) {
-
-            Uri uri2 = data.getData();
-
-            if (uri2.toString().contains("video")) {
-                UriToPath uri2path = new UriToPath();
-                videopath = uri2path.getPath(hcontext, uri2);
-            }
-
-        }
-    }
     private boolean checkCAMERAPermission() {
 
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
@@ -384,11 +377,9 @@ public class HomeActivity extends AppCompatActivity {
                 if (grantResults.length > 0) {
                     boolean cameraAccepted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);  //권한을 허가받았는지 boolean값으로 저장한다.
                     if (cameraAccepted) {
-
                         Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
                         startActivity(intent);
                         //camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);  //카메라를 open() 할 수 있다.
-
 
                     }
                 }

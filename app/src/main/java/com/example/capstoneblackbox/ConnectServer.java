@@ -35,13 +35,14 @@ public class ConnectServer {
 
     String user_id="";
     public boolean downloadExist = true;
-    public int vidnum = 1;
+    public int currVid = 1;
+    public int nextVid =currVid;
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("full_video", "filepathReal.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
+                .addFormDataPart("full_video", "test.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
                 .addFormDataPart("date", date)
                 .addFormDataPart("size", size)
                 .addFormDataPart("storage_path", path)
@@ -65,6 +66,7 @@ public class ConnectServer {
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 Log.d("aaaa", "Response Body is " + response.body().string());
+                ((PopupActivity)PopupActivity.pcontext).goAbnormAct();
             }
         });
     }
@@ -208,93 +210,91 @@ public class ConnectServer {
     }
 
     public void requestVideoGet(String svurl, String stroage_url){
-        vidnum = 1;
+        currVid = 1;
+        nextVid = currVid;
         downloadExist = true;
 
         //while문을 돌면서 0701.mp4, 0702.mp4 ... url에 접속해서 영상 다운받음
         //while문 끝나는 법 >> 영상이 3개면 0703까지일테니까 0704.mp4 url 접속 시도 시 onFailure될것임 그때 while문을 빠져나옴
-        while(downloadExist) {
-            //비디오의 url 만드는 부분
-            //ex) 0701, 0702 ...
-            String vid_name = user_id + "0" + String.valueOf(vidnum) + ".mp4";
-            String vid_url = svurl + vid_name;
 
-            Request request = new Request.Builder()
-                    .url(vid_url)
-                    .build();
+        //비디오의 url 만드는 부분
+        //ex) 0701, 0702 ...
+        currVid = nextVid;
+        String vid_name = user_id + "0" + String.valueOf(currVid) + ".mp4";
+        String vid_url = svurl + "/" +vid_name;
+        nextVid++;
 
-            client.newCall(request).enqueue(new Callback() {
+        Request request = new Request.Builder()
+                .url(vid_url)
+                .build();
 
-                private File directory = new File(stroage_url);
-                File mediaFile;
+        client.newCall(request).enqueue(new Callback() {
+            private File mediaFile;
 
-                //비동기 처리를 위해 Callback 구현
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("error + Connect Server Error is " + e.toString());
-                    downloadExist = false;
+            //비동기 처리를 위해 Callback 구현
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("error + Connect Server Error is " + e.toString());
+                downloadExist = false;
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Headers responseHeaders = response.headers();
+                for (int i = 0; i < responseHeaders.size(); i++) {
+                    Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
                 }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0; i < responseHeaders.size(); i++) {
-                        Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                InputStream inputStream = null;
+
+                try {
+                    inputStream = response.body().byteStream();
+
+                    byte[] buff = new byte[1024 * 4];
+                    long downloaded = 0;
+                    long target = response.body().contentLength();
+                    mediaFile = new File(stroage_url + vid_name);
+
+                    if (this.mediaFile.exists()) {
+                        this.mediaFile.delete();
                     }
 
-                    if (!this.directory.exists()) {
-                        this.directory.mkdirs();
+                    OutputStream output = new FileOutputStream(mediaFile);
+
+                    while (true) {
+                        int readed = inputStream.read(buff);
+
+                        if (readed == -1) {
+                            break;
+                        }
+                        output.write(buff, 0, readed);
+                        //write buff
+                        downloaded += readed;
                     }
-                    InputStream inputStream = null;
 
-                    try {
-                        inputStream = response.body().byteStream();
-
-                        byte[] buff = new byte[1024 * 4];
-                        long downloaded = 0;
-                        long target = response.body().contentLength();
-                        mediaFile = new File(stroage_url + vid_name);
-
-                        if (this.mediaFile.exists()) {
-                            this.mediaFile.delete();
+                    output.flush();
+                    output.close();
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(MainActivity.mcontext, String.valueOf(currVid) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
                         }
+                    }, 0);
 
-                        OutputStream output = new FileOutputStream(mediaFile);
-
-                        while (true) {
-                            int readed = inputStream.read(buff);
-
-                            if (readed == -1) {
-                                break;
-                            }
-                            output.write(buff, 0, readed);
-                            //write buff
-                            downloaded += readed;
-                        }
-
-                        output.flush();
-                        output.close();
-                        Handler mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 사용하고자 하는 코드
-                                Toast.makeText(MainActivity.mcontext, String.valueOf(vidnum) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
-                            }
-                        }, 0);
-                        ++vidnum;
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (inputStream != null) {
-                            inputStream.close();
-                        }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (inputStream != null) {
+                        inputStream.close();
                     }
                 }
-            });
-        }//while문 끝
-        ((PopupActivity)PopupActivity.pcontext).goAbnormAct();
+            }
+        });
+        /*while(downloadExist) {
+
+        }*/
 
 
 

@@ -13,8 +13,6 @@ import android.widget.Button;
 
 import com.example.capstoneblackbox.databinding.ActivityPopupBinding;
 
-import static com.example.capstoneblackbox.MainActivity.mcontext;
-
 public class PopupActivity extends Activity {
     ActivityPopupBinding binding;
     public static Context pcontext;
@@ -27,7 +25,7 @@ public class PopupActivity extends Activity {
 
     String date = "2021-01-01 12:30:01";
     String size = "1000";
-    String path = "/uploads/test.mp4";
+    String path = "/input/test.mp4";
     int user_id = 2;
     String videopath;
 
@@ -54,13 +52,10 @@ public class PopupActivity extends Activity {
         btnAbnorm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                videopath = ((HomeActivity)HomeActivity.hcontext).videopath;
 
-                ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://b049b8cfa4d4.ngrok.io/api/input", videopath, path, size, date, user_id);
-
-                ((MainActivity) mcontext).connectServerPost
-                        .requestVideoGet("http://b049b8cfa4d4.ngrok.io/output", "/storage/emulated/0/MagicBox/");
+               /* ((MainActivity)MainActivity.mcontext).connectServerPost
+                        .requestPost("http://b3229d98848b.ngrok.io/api/full", videopath, path, size, date, user_id);*/
+               goAbnormAct();
             }
         });
 

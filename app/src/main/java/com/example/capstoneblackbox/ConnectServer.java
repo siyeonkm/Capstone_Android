@@ -258,7 +258,7 @@ public class ConnectServer {
                     long downloaded = 0;
                     long target = response.body().contentLength();
 
-                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBox";
+                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
                     File dirFile = new File(dir);
 
                     //매직박스용 외부저장소 폴더 생성

@@ -91,6 +91,6 @@ Code is under the [Apache Licence v2](https://github.com/kkminyoung/Capstone_mod
 
 # 프로젝트 레파지토리 정리
 - 딥러닝 repository : https://github.com/kkminyoung/Capstone_model
-- 안드로이드 repository : https://github.com/kkminyoung/Capstone_android
+- 안드로이드 repository : https://github.com/siyeonkm/Capstone_Android
 - 서버 repository : https://github.com/Kim-Ha-Jeong/Capstone_server
 

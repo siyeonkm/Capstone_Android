@@ -54,7 +54,7 @@ public class PopupActivity extends Activity {
             public void onClick(View view) {
 
                /*((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://3b9695b92f5e.ngrok.io/api/full", videopath, path, size, date, user_id);*/
+                        .requestPost("http://a7c2385c8c03.ngrok.io/api/full", videopath, path, size, date, user_id);*/
                goAbnormAct();
             }
         });

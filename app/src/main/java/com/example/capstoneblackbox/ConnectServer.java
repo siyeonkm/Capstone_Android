@@ -38,7 +38,9 @@ public class ConnectServer {
     public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).connectTimeout(30, TimeUnit.MINUTES).build();
 
     String user_id="";
+
     public boolean downloadExist = true;
+    public boolean t = true;
     public int currVid = 1;
     public int nextVid =currVid;
 
@@ -70,7 +72,6 @@ public class ConnectServer {
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 Log.d("aaaa", "Response Body is " + response.body().string());
-                ((PopupActivity)PopupActivity.pcontext).goAbnormAct();
             }
         });
     }
@@ -214,109 +215,125 @@ public class ConnectServer {
     }
 
     public void requestVideoGet(String svurl){
-        currVid = 1;
-        nextVid = currVid;
-        downloadExist = true;
-
+        currVid = 1; nextVid = 1;
         //while문을 돌면서 0701.mp4, 0702.mp4 ... url에 접속해서 영상 다운받음
         //while문 끝나는 법 >> 영상이 3개면 0703까지일테니까 0704.mp4 url 접속 시도 시 onFailure될것임 그때 while문을 빠져나옴
 
         //비디오의 url 만드는 부분
-        //ex) 0701, 0702 ...
-        currVid = nextVid;
-        String vid_name = user_id + "0" + String.valueOf(currVid) + ".mp4";
-        String vid_url = svurl + "/" +vid_name;
-        nextVid++;
-
-        Request request = new Request.Builder()
-                .url(vid_url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            private File mediaFile;
-
-            //비동기 처리를 위해 Callback 구현
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("error + Connect Server Error is " + e.toString());
-                downloadExist = false;
+        //ex) 0701, 0702...
+        while(t) {
+            if(downloadExist == false) {
+                t = false;
+                Log.d("MESSAGE", "더이상 영상 없음 종료");
+                break;
             }
+            currVid = nextVid;
+            String vid_name = user_id + "0" + String.valueOf(currVid) + ".mp4";
+            String vid_url = svurl + "/" +vid_name;
+            nextVid++;
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+            //Log.d("MESSAGE", currVid + "번 영상 다운로드 시도");
+            String nothing = "0701.mp4";
+            String nowhere = svurl + "/" + nothing;
+
+            Request request = new Request.Builder()
+                    .url(vid_url)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                private File mediaFile;
+
+                //비동기 처리를 위해 Callback 구현
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("ERROR", "error + Connect Server Error is " + e.toString());
+                    downloadExist = false;
                 }
 
-                InputStream inputStream = null;
-
-                try {
-                    inputStream = response.body().byteStream();
-
-                    byte[] buff = new byte[1024 * 4];
-                    long downloaded = 0;
-                    long target = response.body().contentLength();
-
-                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
-                    File dirFile = new File(dir);
-
-                    //매직박스용 외부저장소 폴더 생성
-                    if(!dirFile.exists()) {
-                        dirFile.mkdirs();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Headers responseHeaders = response.headers();
+                    String res = response.body().string();
+                    Log.d("MESSAGE", res);
+                    /*for (int i = 0; i < responseHeaders.size(); i++) {
+                        Log.d("INFO", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }*/
+                    if(res.equals("error")) {
+                        downloadExist = false;
                     }
+                    else {
+                        Log.d("MESSAGE", currVid + "번 영상 다운로드 시작");
+                        InputStream inputStream = null;
 
-                    mediaFile = new File(dir + "/" + vid_name);
+                        try {
+                            inputStream = response.body().byteStream();
 
-                    if (this.mediaFile.exists()) {
-                        this.mediaFile.delete();
-                    }
+                            byte[] buff = new byte[1024 * 4];
+                            long downloaded = 0;
+                            long target = response.body().contentLength();
 
-                    OutputStream output = new FileOutputStream(mediaFile);
+                            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+                            File dirFile = new File(dir);
 
-                    while (true) {
-                        int readed = inputStream.read(buff);
+                            //매직박스용 외부저장소 폴더 생성
+                            if(!dirFile.exists()) {
+                                dirFile.mkdirs();
+                            }
 
-                        if (readed == -1) {
-                            break;
+                            mediaFile = new File(dir + "/" + vid_name);
+
+                            if (this.mediaFile.exists()) {
+                                this.mediaFile.delete();
+                            }
+
+                            OutputStream output = new FileOutputStream(mediaFile);
+
+                            while (true) {
+                                int readed = inputStream.read(buff);
+
+                                if (readed == -1) {
+                                    break;
+                                }
+                                output.write(buff, 0, readed);
+                                //write buff
+                                downloaded += readed;
+                            }
+
+                            output.flush();
+                            output.close();
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(MainActivity.mcontext, String.valueOf(currVid) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
+                            }
+                        }, 0);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
                         }
-                        output.write(buff, 0, readed);
-                        //write buff
-                        downloaded += readed;
-                    }
-
-                    output.flush();
-                    output.close();
-                    Handler mHandler = new Handler(Looper.getMainLooper());
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // 사용하고자 하는 코드
-                            Toast.makeText(MainActivity.mcontext, String.valueOf(currVid) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
-                        }
-                    }, 0);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
+                        //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
+                        MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(MainActivity.mcontext, "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_LONG).show();
+                            }
+                        }, 0);
                     }
                 }
-                //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
-                MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
-                Handler mHandler = new Handler(Looper.getMainLooper());
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 사용하고자 하는 코드
-                        Toast.makeText(MainActivity.mcontext, "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_LONG).show();
-                    }
-                }, 0);
-                ((AbnormalActivity)AbnormalActivity.abcontext).fromAbtoHomeActivity();
+            });
 
-            }
-        });
+
+        }
+        ((AbnormalActivity)AbnormalActivity.abcontext).fromAbtoHomeActivity();
 
     }
 }

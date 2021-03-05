@@ -38,6 +38,7 @@ public class ConnectServer {
 
     public static boolean t = true;
     public int video=1;
+    public int vidcnt=0;
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
@@ -153,11 +154,36 @@ public class ConnectServer {
         });
     }
 
+    public void requestVideoCnt(String svurl){
+        Request request = new Request.Builder()
+                .url(svurl)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            //비동기 처리를 위해 Callback 구현
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("ERROR", "error + Connect Server Error is " + e.toString());
+                t = false;
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Headers responseHeaders = response.headers();
+                String vidcnt_s = response.body().string();
+                vidcnt = Integer.parseInt(vidcnt_s);
+                Log.d("MESSAGE", "동영상 개수: " + vidcnt_s);
+                ((Popup2Activity)Popup2Activity.p2context).popup_to_ab();
+            }
+        });
+    }
+
     public void requestVideoGet(String svurl){
         t=true;
         video=1;
 
-        for(video=1; video<3; video++) {
+        for(video=1; video<vidcnt+1; video++) {
             String vid_name = "edited"+ user_id + "0"+ video + "01" + ".mp4";
             String vid_url = svurl + "/" +vid_name;
 

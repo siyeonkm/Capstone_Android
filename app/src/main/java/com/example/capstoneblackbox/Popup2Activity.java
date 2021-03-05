@@ -51,14 +51,15 @@ public class Popup2Activity extends Activity {
             @Override
             public void onClick(View view) {
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://a7c2385c8c03.ngrok.io/api/full", videopath, path, size, date, user_id);
+                        .requestPost("http://1f06b537b663.ngrok.io/api/full", videopath, path, size, date, user_id);
             }
         });
 
         btndwn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                DownloadScreenActivity();
+                ((MainActivity)MainActivity.mcontext).connectServerPost
+                        .requestVideoCnt("http://1f06b537b663.ngrok.io/api/edited/count");
             }
         });
 
@@ -88,7 +89,7 @@ public class Popup2Activity extends Activity {
         }
     }
 
-    public void DownloadScreenActivity() {
+    public void popup_to_ab() {
         Intent intent = new Intent(Popup2Activity.this, AbnormalActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

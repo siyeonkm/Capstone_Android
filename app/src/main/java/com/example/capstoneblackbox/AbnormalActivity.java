@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,30 +28,12 @@ public class AbnormalActivity extends AppCompatActivity {
         abcontext = this;
 
         ((MainActivity) mcontext).connectServerPost
-                .requestVideoGet("http://42cdf7866d6b.ngrok.io/output");
+                .requestVideoGet("http://dfb0a042a7c5.ngrok.io/output");
     }
 
-    public void goToAlbum() {
-        Uri targetUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String targetDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBox";
-        targetUri = targetUri.buildUpon().appendQueryParameter("bucketId", String.valueOf(targetDir.toLowerCase().hashCode())).build();
-        Intent intent = new Intent(Intent.ACTION_VIEW, targetUri);
-        intent.setType("video/*");
-        startActivityForResult(intent, 1);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-
-            viduri = data.getData();
-            if (viduri.toString().contains("video")) {
-                UriToPath uri2path = new UriToPath();
-                vidpath = uri2path.getPath(abcontext, viduri);
-            }
-        }
+    public void fromAbtoHomeActivity() {
+        Intent intent = new Intent(AbnormalActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

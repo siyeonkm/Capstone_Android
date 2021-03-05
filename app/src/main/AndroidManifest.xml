@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AbnormVideoActivity"></activity>
+        <activity android:name=".Popup2Activity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar"/>
         <activity android:name=".RecordScreenActivity" />
         <activity android:name=".LoadingActivity" />
         <activity android:name=".VideoPlayActivity" />

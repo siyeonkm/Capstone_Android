@@ -11,8 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,7 +23,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 import static io.realm.Realm.getApplicationContext;
 
@@ -34,12 +32,12 @@ import static io.realm.Realm.getApplicationContext;
 public class ConnectServer {
 
     public final MyCookieJar myCookieJar = new MyCookieJar();
-    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).build();
+    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).connectTimeout(30, TimeUnit.MINUTES).build();
 
     String user_id="";
-    public boolean downloadExist = true;
-    public int currVid = 1;
-    public int nextVid =currVid;
+
+    public static boolean t = true;
+    public int video=1;
 
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
@@ -69,7 +67,6 @@ public class ConnectServer {
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 Log.d("aaaa", "Response Body is " + response.body().string());
-                ((PopupActivity)PopupActivity.pcontext).goAbnormAct();
             }
         });
     }
@@ -156,157 +153,88 @@ public class ConnectServer {
         });
     }
 
-    public void requestGet(String url) {
-        final List<UserInfo> userArr = new ArrayList<UserInfo>();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            //비동기 처리를 위해 Callback 구현
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("error + Connect Server Error is " + e.toString());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                ResponseBody rBody = response.body();
-                String htmlstr = rBody.string();
-                String result1;
-                String result2[];
-                String result3[] = new String[50];
-                int j = 0; int i = 0;
-
-                //Log.d("aaaa", "Response Body is " + htmlstr);
-                result1 = htmlstr.substring(htmlstr.indexOf("<td>")+4, htmlstr.lastIndexOf("</td>"));
-                result2 = result1.split("<td>|</td>");
-
-
-                for(i = 0, j=0; i < result2.length; i++) {
-                    if(result2[i].contains("<!--") || result2[i].contains("-->") || result2[i].contains("\n")
-                    || result2[i].contains("수정") || result2[i].contains("삭제")) {
-
-                    }
-                    else {
-                        result3[j] = result2[i];
-                        j++;
-                    }
-                }
-
-                for(i=0; i<j; i++) {
-                    if(result3[i].contains("</a>")) {
-                        result3[i] = result3[i].substring(result3[i].indexOf(">")+1, result3[i].lastIndexOf("</a>"));
-                    }
-                }
-
-                for(i = 1; i< j+1; i++) {
-                    if(i%6 == 1) {
-                        UserInfo userInfo = new UserInfo(result3[i-1], result3[i], result3[i+1], result3[i+2], result3[i+3], result3[i+4]);
-                        userArr.add(userInfo);
-                    }
-                    System.out.println(i + ": " + result3[i-1]);
-                }
-            }
-        });
-    }
-
     public void requestVideoGet(String svurl){
-        currVid = 1;
-        nextVid = currVid;
-        downloadExist = true;
+        t=true;
+        video=1;
 
-        //while문을 돌면서 0701.mp4, 0702.mp4 ... url에 접속해서 영상 다운받음
-        //while문 끝나는 법 >> 영상이 3개면 0703까지일테니까 0704.mp4 url 접속 시도 시 onFailure될것임 그때 while문을 빠져나옴
+        for(video=1; video<3; video++) {
+            String vid_name = "edited"+ user_id + "0"+ video + "01" + ".mp4";
+            String vid_url = svurl + "/" +vid_name;
 
-        //비디오의 url 만드는 부분
-        //ex) 0701, 0702 ...
-        currVid = nextVid;
-        String vid_name = user_id + "0" + String.valueOf(currVid) + ".mp4";
-        String vid_url = svurl + "/" +vid_name;
-        nextVid++;
+            Request request = new Request.Builder()
+                    .url(vid_url)
+                    .build();
 
-        Request request = new Request.Builder()
-                .url(vid_url)
-                .build();
+            client.newCall(request).enqueue(new Callback() {
+                private File mediaFile;
 
-        client.newCall(request).enqueue(new Callback() {
-            private File mediaFile;
-
-            //비동기 처리를 위해 Callback 구현
-            @Override
-            public void onFailure(Call call, IOException e) {
-                System.out.println("error + Connect Server Error is " + e.toString());
-                downloadExist = false;
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    Log.d("aaaa", responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                //비동기 처리를 위해 Callback 구현
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("ERROR", "error + Connect Server Error is " + e.toString());
+                    t = false;
                 }
 
-                InputStream inputStream = null;
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Headers responseHeaders = response.headers();
+                    InputStream inputStream = null;
 
-                try {
-                    inputStream = response.body().byteStream();
+                    try {
+                        inputStream = response.body().byteStream();
 
-                    byte[] buff = new byte[1024 * 4];
-                    long downloaded = 0;
-                    long target = response.body().contentLength();
+                        byte[] buff = new byte[1024 * 4];
+                        long downloaded = 0;
+                        long target = response.body().contentLength();
 
-                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBox";
-                    File dirFile = new File(dir);
+                        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+                        File dirFile = new File(dir);
 
-                    //매직박스용 외부저장소 폴더 생성
-                    if(!dirFile.exists()) {
-                        dirFile.mkdirs();
-                    }
-
-                    mediaFile = new File(dir + "/" + vid_name);
-
-                    if (this.mediaFile.exists()) {
-                        this.mediaFile.delete();
-                    }
-
-                    OutputStream output = new FileOutputStream(mediaFile);
-
-                    while (true) {
-                        int readed = inputStream.read(buff);
-
-                        if (readed == -1) {
-                            break;
+                        //매직박스용 외부저장소 폴더 생성
+                        if(!dirFile.exists()) {
+                            dirFile.mkdirs();
                         }
-                        output.write(buff, 0, readed);
-                        //write buff
-                        downloaded += readed;
-                    }
 
-                    output.flush();
-                    output.close();
+                        mediaFile = new File(dir + "/" + vid_name);
+
+                        if (this.mediaFile.exists()) {
+                            this.mediaFile.delete();
+                        }
+
+                        OutputStream output = new FileOutputStream(mediaFile);
+
+                        while (true) {
+                            int readed = inputStream.read(buff);
+
+                            if (readed == -1) {
+                                break;
+                            }
+                            output.write(buff, 0, readed);
+                            //write buff
+                            downloaded += readed;
+                        }
+                        output.flush();
+                        output.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (inputStream != null) {
+                            inputStream.close();
+                        }
+                    }
+                    //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
+                    MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
                     Handler mHandler = new Handler(Looper.getMainLooper());
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // 사용하고자 하는 코드
-                            Toast.makeText(MainActivity.mcontext, String.valueOf(currVid) + "번영상 다운로드완료!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
                         }
                     }, 0);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
                 }
-                //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
-                MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
-                ((AbnormalActivity)AbnormalActivity.abcontext).goToAlbum();
-            }
-        });
-
+            });
+        }
     }
 }

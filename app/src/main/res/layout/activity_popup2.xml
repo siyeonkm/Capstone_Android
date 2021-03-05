@@ -40,12 +40,12 @@
             android:layout_marginBottom="50dp" />
 
         <Button
-            android:id="@+id/button_abnormalDetect"
+            android:id="@+id/button_upload"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:background="@drawable/yellowbutton"
             android:layout_gravity="center_horizontal"
-            android:text="비정상적 상황 추출하기"
+            android:text="영상 업로드하기"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorTheme_black"/>
@@ -56,31 +56,17 @@
             android:layout_marginBottom="30dp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button_download"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:background="@drawable/yellowbutton"
             android:layout_gravity="center_horizontal"
-            android:text="충격 감지 상황 추출하기"
+            android:text="추출된 비정상적 상황 다운받기"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorTheme_black" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/yellowbutton"
-            android:layout_gravity="center_horizontal"
-            android:text="직접 추출하기"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorTheme_black" />
 
         <Space
             android:layout_width="match_parent"

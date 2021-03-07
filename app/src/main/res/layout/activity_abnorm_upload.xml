@@ -11,7 +11,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "추출된 이상한 상황을 다운로드 중입니다"
+        android:text = "추출하기 위해 영상을 업로드중입니다"
         android:textColor="#2D2D2D"
         android:textSize="20sp"
         android:textStyle="bold"

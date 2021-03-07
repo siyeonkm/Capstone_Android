@@ -21,11 +21,6 @@ public class Popup2Activity extends Activity {
     Button btndwn;
 
     private static final int PICK_FROM_ALBUM = 1;
-
-    String date = "2021-01-01 12:30:01";
-    String size = "1000";
-    String path = "/input/test.mp4";
-    int user_id = 2;
     String videopath;
 
     @Override
@@ -45,13 +40,10 @@ public class Popup2Activity extends Activity {
         btnup = binding.buttonUpload;
         btndwn = binding.buttonDownload;
 
-        goToAlbum();
-
         btnup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestPost("http://1f06b537b663.ngrok.io/api/full", videopath, path, size, date, user_id);
+                goToAlbum();
             }
         });
 
@@ -59,7 +51,7 @@ public class Popup2Activity extends Activity {
             @Override
             public void onClick(View view) {
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestVideoCnt("http://1f06b537b663.ngrok.io/api/edited/count");
+                        .requestVideoCnt("http://1f04d4b63ce2.ngrok.io/api/edited/count");
             }
         });
 
@@ -84,6 +76,7 @@ public class Popup2Activity extends Activity {
             if (uri2.toString().contains("video")) {
                 UriToPath uri2path = new UriToPath();
                 videopath = uri2path.getPath(p2context, uri2);
+                popup_to_abup();
             }
 
         }
@@ -91,6 +84,11 @@ public class Popup2Activity extends Activity {
 
     public void popup_to_ab() {
         Intent intent = new Intent(Popup2Activity.this, AbnormalActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+    public void popup_to_abup() {
+        Intent intent = new Intent(Popup2Activity.this, AbnormUploadActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

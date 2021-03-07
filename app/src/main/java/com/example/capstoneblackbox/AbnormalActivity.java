@@ -15,6 +15,7 @@ import static com.example.capstoneblackbox.MainActivity.mcontext;
 public class AbnormalActivity extends AppCompatActivity {
     public static Context abcontext;
     ActivityAbnormalBinding binding;
+    private long backKeyPressedTime = 0;
     String vidpath;
     Uri viduri;
 
@@ -28,7 +29,7 @@ public class AbnormalActivity extends AppCompatActivity {
         abcontext = this;
 
         ((MainActivity) mcontext).connectServerPost
-                .requestVideoGet("http://1f06b537b663.ngrok.io/output");
+                .requestVideoGet("http://1f04d4b63ce2.ngrok.io/output");
     }
 
     public void fromAbtoHomeActivity() {

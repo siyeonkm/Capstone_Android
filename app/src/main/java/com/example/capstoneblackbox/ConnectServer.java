@@ -32,7 +32,10 @@ import static io.realm.Realm.getApplicationContext;
 public class ConnectServer {
 
     public final MyCookieJar myCookieJar = new MyCookieJar();
-    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar).connectTimeout(30, TimeUnit.MINUTES).build();
+    public final OkHttpClient client = new OkHttpClient.Builder().cookieJar(myCookieJar)
+            .connectTimeout(30, TimeUnit.MINUTES)
+            .readTimeout(30, TimeUnit.MINUTES)
+            .writeTimeout(30, TimeUnit.MINUTES).build();
 
     String user_id="";
 
@@ -44,7 +47,7 @@ public class ConnectServer {
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("full_video", "test.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
+                .addFormDataPart("full_video", "abnorm.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
                 .addFormDataPart("date", date)
                 .addFormDataPart("size", size)
                 .addFormDataPart("storage_path", path)
@@ -62,12 +65,22 @@ public class ConnectServer {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                Log.d("error", "Connect Server Error is " + e.toString());
+                Log.d("ERROR", "Connect Server Error is " + e.toString());
             }
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                Log.d("aaaa", "Response Body is " + response.body().string());
+                String vidname = response.body().string();
+                Log.d("MESSAGE", "Response Body is " + vidname);
+                Handler mHandler = new Handler(Looper.getMainLooper());
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 사용하고자 하는 코드
+                        Toast.makeText(MainActivity.mcontext, vidname + " 업로드 완료!", Toast.LENGTH_LONG).show();
+                    }
+                }, 0);
+                ((AbnormUploadActivity)AbnormUploadActivity.abupcontext).fromAbUptoHomeActivity();
             }
         });
     }
@@ -179,12 +192,10 @@ public class ConnectServer {
         });
     }
 
-    public void requestVideoGet(String svurl){
-        t=true;
-        video=1;
-
-        for(video=1; video<vidcnt+1; video++) {
-            String vid_name = "edited"+ user_id + "0"+ video + "01" + ".mp4";
+    public void requestVideoGet(String svurl)
+    {
+        for(video=1; video<11; video++) {
+            String vid_name = "edited"+ user_id + "0"+ String.valueOf(video) + "01" + ".mp4";
             String vid_url = svurl + "/" +vid_name;
 
             Request request = new Request.Builder()
@@ -198,67 +209,70 @@ public class ConnectServer {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.d("ERROR", "error + Connect Server Error is " + e.toString());
-                    t = false;
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Headers responseHeaders = response.headers();
-                    InputStream inputStream = null;
 
-                    try {
-                        inputStream = response.body().byteStream();
-
-                        byte[] buff = new byte[1024 * 4];
-                        long downloaded = 0;
-                        long target = response.body().contentLength();
-
-                        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
-                        File dirFile = new File(dir);
-
-                        //매직박스용 외부저장소 폴더 생성
-                        if(!dirFile.exists()) {
-                            dirFile.mkdirs();
-                        }
-
-                        mediaFile = new File(dir + "/" + vid_name);
-
-                        if (this.mediaFile.exists()) {
-                            this.mediaFile.delete();
-                        }
-
-                        OutputStream output = new FileOutputStream(mediaFile);
-
-                        while (true) {
-                            int readed = inputStream.read(buff);
-
-                            if (readed == -1) {
-                                break;
-                            }
-                            output.write(buff, 0, readed);
-                            //write buff
-                            downloaded += readed;
-                        }
-                        output.flush();
-                        output.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (inputStream != null) {
-                            inputStream.close();
-                        }
+                    if(response.body().string().equals("error")) {
+                        return;
                     }
-                    //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
-                    MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
-                    Handler mHandler = new Handler(Looper.getMainLooper());
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // 사용하고자 하는 코드
-                            Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
+                    else {
+                        try {
+                            InputStream inputStream = null;
+                            inputStream = response.body().byteStream();
+
+                            byte[] buff = new byte[1024 * 4];
+                            long downloaded = 0;
+                            long target = response.body().contentLength();
+
+                            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+                            File dirFile = new File(dir);
+
+                            //매직박스용 외부저장소 폴더 생성
+                            if(!dirFile.exists()) {
+                                dirFile.mkdirs();
+                            }
+
+                            mediaFile = new File(dir + "/" + vid_name);
+
+                            if (this.mediaFile.exists()) {
+                                this.mediaFile.delete();
+                            }
+
+                            OutputStream output = new FileOutputStream(mediaFile);
+
+                            while (true) {
+                                int readed = inputStream.read(buff);
+
+                                if (readed == -1) {
+                                    break;
+                                }
+                                output.write(buff, 0, readed);
+                                //write buff
+                                downloaded += readed;
+                            }
+                            output.flush();
+                            output.close();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
                         }
-                    }, 0);
+                        //저장한다고 바로 갤러리에 영상이 뜨지 않아서 수동으로 미디어스캐닝하는 방법
+                        MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
+                            }
+                        }, 0);
+                    }
                 }
             });
         }

@@ -51,7 +51,7 @@ public class Popup2Activity extends Activity {
             @Override
             public void onClick(View view) {
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestVideoCnt("http://35371f81fc76.ngrok.io/api/edited/count");
+                        .requestVideoCnt("http://dc1db253aeb0.ngrok.io/api/edited/count");
             }
         });
 

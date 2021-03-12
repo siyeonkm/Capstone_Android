@@ -29,7 +29,7 @@ public class AbnormalActivity extends AppCompatActivity {
         abcontext = this;
 
         ((MainActivity) mcontext).connectServerPost
-                .requestVideoGet("http://35371f81fc76.ngrok.io/output");
+                .requestVideoGet("http://dc1db253aeb0.ngrok.io/output");
     }
 
     public void fromAbtoHomeActivity() {

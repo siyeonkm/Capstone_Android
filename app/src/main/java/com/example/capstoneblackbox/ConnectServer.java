@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -41,8 +42,7 @@ public class ConnectServer {
 
     public static boolean t = true;
     public int video=1;
-    public int vidcnt=0;
-
+    public int[] num_of_video = new int[50];
     public void requestPost(String url, String video, String path, String size, String date, int user_id) {
 
         RequestBody requestBody = new MultipartBody.Builder()
@@ -185,7 +185,10 @@ public class ConnectServer {
             public void onResponse(Call call, Response response) throws IOException {
                 Headers responseHeaders = response.headers();
                 String vidcnt_s = response.body().string();
-                vidcnt = Integer.parseInt(vidcnt_s);
+                Arrays.fill(num_of_video, -1);
+                for(int i = 0; i<vidcnt_s.length(); i++) {
+                    num_of_video[i] = vidcnt_s.charAt(i) - '0';
+                }
                 Log.d("MESSAGE", "동영상 개수: " + vidcnt_s);
                 ((Popup2Activity)Popup2Activity.p2context).popup_to_ab();
             }
@@ -194,82 +197,85 @@ public class ConnectServer {
 
     public void requestVideoGet(String svurl)
     {
-        for(video=1; video<11; video++) {
-            String vid_name = "edited"+ user_id + "0"+ String.valueOf(video) + "01" + ".mp4";
-            String vid_url = svurl + "/" +vid_name;
+        for(int i = 1; num_of_video[i] != -1; i++) {
+            for(int j = 1; j<num_of_video[i]+1; j++) {
+                String vid_name = "edited"+ user_id + "0"+ String.valueOf(i) + "0" + String.valueOf(j) + ".mp4";
+                Log.d("MESSAGE", "동영상: " + vid_name);
+                String vid_url = svurl + "/" +vid_name;
 
-            Request request = new Request.Builder()
-                    .url(vid_url)
-                    .build();
+                Request request = new Request.Builder()
+                        .url(vid_url)
+                        .build();
 
-            client.newCall(request).enqueue(new Callback() {
-                private File mediaFile;
+                client.newCall(request).enqueue(new Callback() {
+                    private File mediaFile;
 
-                //비동기 처리를 위해 Callback 구현
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.d("ERROR", "error + Connect Server Error is " + e.toString());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    InputStream inputStream = null;
-                    inputStream = response.body().byteStream();
-                    String err = new String();
-
-                    try {
-                        byte[] buff = new byte[1024 * 4];
-                        long downloaded = 0;
-                        long target = response.body().contentLength();
-
-                        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
-                        File dirFile = new File(dir);
-
-                        //매직박스용 외부저장소 폴더 생성
-                        if(!dirFile.exists()) {
-                            dirFile.mkdirs();
-                        }
-
-                        mediaFile = new File(dir + "/" + vid_name);
-
-                        if (this.mediaFile.exists()) {
-                            this.mediaFile.delete();
-                        }
-
-
-                        OutputStream output = new FileOutputStream(mediaFile);
-
-                        while (true) {
-                            int readed = inputStream.read(buff);
-
-                            if (readed == -1) {
-                                break;
-                            }
-                            output.write(buff, 0, readed);
-                            //write buff
-                            downloaded += readed;
-                        }
-                        output.flush();
-                        output.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }finally{
-                        if(inputStream != null){
-                            inputStream.close();
-                        }
+                    //비동기 처리를 위해 Callback 구현
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d("ERROR", "error + Connect Server Error is " + e.toString());
                     }
-                    MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
-                    Handler mHandler = new Handler(Looper.getMainLooper());
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // 사용하고자 하는 코드
-                            Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        InputStream inputStream = null;
+                        inputStream = response.body().byteStream();
+                        String err = new String();
+
+                        try {
+                            byte[] buff = new byte[1024 * 4];
+                            long downloaded = 0;
+                            long target = response.body().contentLength();
+
+                            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+                            File dirFile = new File(dir);
+
+                            //매직박스용 외부저장소 폴더 생성
+                            if(!dirFile.exists()) {
+                                dirFile.mkdirs();
+                            }
+
+                            mediaFile = new File(dir + "/" + vid_name);
+
+                            if (this.mediaFile.exists()) {
+                                this.mediaFile.delete();
+                            }
+
+
+                            OutputStream output = new FileOutputStream(mediaFile);
+
+                            while (true) {
+                                int readed = inputStream.read(buff);
+
+                                if (readed == -1) {
+                                    break;
+                                }
+                                output.write(buff, 0, readed);
+                                //write buff
+                                downloaded += readed;
+                            }
+                            output.flush();
+                            output.close();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally{
+                            if(inputStream != null){
+                                inputStream.close();
+                            }
                         }
-                    }, 0);
-                }
-            });
+                        MediaScanner mediaScanner = new MediaScanner(getApplicationContext(), mediaFile);
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
+                            }
+                        }, 0);
+                    }
+                });
+            }
         }
     }
 }

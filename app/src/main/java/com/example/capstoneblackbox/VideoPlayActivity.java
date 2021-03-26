@@ -29,8 +29,14 @@ public class VideoPlayActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String videoName = intent.getExtras().getString("videoName");
 
-        String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
-        videoPath = sdcard + File.separator + "Download/MagicBox/"+ videoName + ".mp4";
+        if(!videoName.contains(".mp4")) {
+            String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
+            videoPath = sdcard + File.separator + "Download/MagicBox/"+ videoName + ".mp4";
+        }
+        else {
+            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+            videoPath = dir + "/" + videoName;
+        }
 
         videoView.setVideoPath(videoPath);
 

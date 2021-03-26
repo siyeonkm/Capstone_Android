@@ -238,7 +238,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
                     else
                         button = R.drawable.play_impact;
 
-                    list.add(new Video(thumbnail, "촬영_"+ videoName + ".mp4", button, duration));
+                    list.add(new Video(thumbnail, videoName, button, duration));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -295,7 +295,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
                 else
                     button = R.drawable.play_impact;
 
-                list.add(new Video(thumbnail,  "촬영_"+ videoName + ".mp4", button, duration));
+                list.add(new Video(thumbnail,  videoName, button, duration));
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -325,7 +325,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 1000,800);
             button = R.drawable.play;
 
-            list.add(new Video(thumbnail, "비정상추출_" + AbnormVidArr[i] , button, duration));
+            list.add(new Video(thumbnail, AbnormVidArr[i] , button, duration));
         }
 
     }

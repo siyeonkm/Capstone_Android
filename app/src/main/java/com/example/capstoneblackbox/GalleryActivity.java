@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
@@ -206,7 +207,8 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
         }
     }
 
-    public void InitializeData(){
+    public void InitializeData()
+    {
         list = new ArrayList<>();
 
         iCursor = mDBOpenHelper.selectColumns();
@@ -236,7 +238,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
                     else
                         button = R.drawable.play_impact;
 
-                    list.add(new Video(thumbnail, videoName, button, duration));
+                    list.add(new Video(thumbnail, "촬영_"+ videoName + ".mp4", button, duration));
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -245,12 +247,6 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             }
 
         }
-        /*
-        if(!iCursor.moveToNext()){
-            novideo.setVisibility(View.VISIBLE);
-        }
-
-         */
 
         while(iCursor.moveToPrevious()){
             videoName = iCursor.getString(iCursor.getColumnIndex(DataBases.CreateDB.VideoName));
@@ -299,26 +295,61 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
                 else
                     button = R.drawable.play_impact;
 
-                list.add(new Video(thumbnail, videoName, button, duration));
+                list.add(new Video(thumbnail,  "촬영_"+ videoName + ".mp4", button, duration));
             }
             catch (Exception e) {
                 e.printStackTrace();
                 Log.d("db 읽기","못 가져와 : "+videoName);
             }
-
-            //Log.d("db 읽기","비디오 이름 : "+videoName);
-        }
-        //videoName = "magicBox_"+ "2021_01_17_12_04_02";
-        /*
-        if(list.size()==0) {
-            recyclerView.setVisibility(View.GONE);
-            novideo.setVisibility(View.VISIBLE);
-
         }
 
-         */
+        getAbVid();
+    }
 
-        //list.add(new Video());
+    public void getAbVid() {
+        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+        File dirFile = new File(dir);
+
+        //매직박스용 외부저장소 폴더 생성
+        if(!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+
+        String[] AbnormVidArr = dirFile.list();
+        thumbnail = null;
+
+        for(int i=0; i < AbnormVidArr.length; i++) {
+            videoPath = dir + "/" + AbnormVidArr[i];
+            duration = getVidTime(videoPath);
+            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+            thumbnail = ThumbnailUtils.extractThumbnail(bitmap, 1000,800);
+            button = R.drawable.play;
+
+            list.add(new Video(thumbnail, "비정상추출_" + AbnormVidArr[i] , button, duration));
+        }
+
+    }
+
+    public String getVidTime(String url){
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(url);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInmillisec = Long.parseLong( time );
+        long duration = timeInmillisec / 1000;
+        long hours = duration / 3600;
+        long minutes = (duration - hours * 3600) / 60;
+        long seconds = duration - (hours * 3600 + minutes * 60);
+        String tme = "";
+        if(minutes<10) {
+            tme = "0";
+        }
+        tme = tme + String.valueOf(minutes) + ":";
+        if(seconds<10) {
+            tme = tme + "0";
+        }
+        tme = tme + String.valueOf(seconds);
+
+        return tme;
     }
 
 

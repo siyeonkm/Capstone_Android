@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +23,8 @@ public class SettingActivity extends AppCompatActivity {
     Button logout;
     Button myVid;
 
+    TextView helloUser;
+    TextView name;
     public String vidpath;
 
 
@@ -35,13 +38,18 @@ public class SettingActivity extends AppCompatActivity {
 
         myVid = binding.buttonMyVid;
         logout = binding.buttonLogout;
-
         setting = binding.btnSetting;
+        helloUser = binding.hello2;
+        name = binding.txtUserId;
+
+        helloUser.setText(((MainActivity)MainActivity.mcontext).id + "님!");
+        name.setText(((MainActivity)MainActivity.mcontext).id+"님");
 
         myVid.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(SettingActivity.this, LoadingActivity.class );
+                startActivity(intent);
             }
         });
 

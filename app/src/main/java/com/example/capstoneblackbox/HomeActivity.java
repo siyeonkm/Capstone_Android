@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ public class HomeActivity extends AppCompatActivity {
     ImageButton btncrop;
     ImageButton btnsetting;
 
+    TextView helloUser;
+
     String date = "2021-01-01 12:30:01";
     String size = "1000";
     String path = "/uploads/test.mp4";
@@ -71,6 +74,9 @@ public class HomeActivity extends AppCompatActivity {
         btnvideo = binding.videoButton;
         btncrop = binding.cropButton;
         btnsetting = binding.buttonSetting;
+
+        helloUser = binding.hello2;
+        helloUser.setText(((MainActivity)MainActivity.mcontext).id+"님!");
 
         if (APIVersion >= android.os.Build.VERSION_CODES.M) {
             if(hasPermissions()) {
@@ -179,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
             moveTaskToBack(true);
             finishAndRemoveTask();
             toast.cancel();
-
+            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 

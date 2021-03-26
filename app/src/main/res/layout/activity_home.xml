@@ -18,9 +18,8 @@
 
     <ImageButton
         android:id="@+id/button_setting"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:background="@drawable/setting"
         app:layout_constraintStart_toStartOf="@id/imageView3"
         app:layout_constraintTop_toTopOf="@id/imageView3"
@@ -28,13 +27,25 @@
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTheme_yellow"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="반갑습니다, 유저님! "
+        android:text="반갑습니다,"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/hello2"
+        app:layout_constraintTop_toTopOf="@id/imageView3" />
+
+    <TextView
+        android:id="@+id/hello2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTheme_yellow"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="유저님! "
         android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@id/imageView3" />

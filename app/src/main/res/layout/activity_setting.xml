@@ -17,21 +17,32 @@
 
     <ImageButton
         android:id="@+id/btnSetting"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:layout_constraintStart_toStartOf="@id/topbar"
         app:layout_constraintTop_toTopOf="@id/topbar"
         android:background ="@drawable/settingopen" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTheme_black"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="반갑습니다, 유저님! "
+        android:text="반갑습니다,"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/hello2"
+        app:layout_constraintTop_toTopOf="@id/topbar" />
+
+    <TextView
+        android:id="@+id/hello2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTheme_black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="유저님! "
         android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="@+id/topbar"
         app:layout_constraintTop_toTopOf="@id/topbar" />

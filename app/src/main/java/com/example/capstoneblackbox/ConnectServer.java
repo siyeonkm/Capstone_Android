@@ -235,7 +235,7 @@ public class ConnectServer {
                                 dirFile.mkdirs();
                             }
 
-                            mediaFile = new File(dir + "/" + vid_name);
+                            mediaFile = new File(dir + "/" + "비정상_"+vid_name);
 
                             if (this.mediaFile.exists()) {
                                 this.mediaFile.delete();
@@ -270,7 +270,7 @@ public class ConnectServer {
                             @Override
                             public void run() {
                                 // 사용하고자 하는 코드
-                                Toast.makeText(MainActivity.mcontext, vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.mcontext, "비정상_"+vid_name + "영상 다운로드 완료! 갤러리에서 확인하실 수 있습니다", Toast.LENGTH_SHORT).show();
                             }
                         }, 0);
                     }

@@ -223,8 +223,8 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
                     mDate = new Date(startTime);
                     format_time = mFormat.format(mDate);
 
-                    filename = sdcard + File.separator + "Download/MagicBox/"+ "magicBox_"+ format_time + ".mp4";
-                    videoName = "magicBox_"+ format_time;
+                    videoName = "충격_"+"magicBox_"+ format_time;
+                    filename = sdcard + File.separator + "Download/MagicBox/"+ videoName + ".mp4";
                     //recorder.setOutputFile(videoName);
 
                     //startRecording();

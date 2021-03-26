@@ -159,7 +159,14 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
             //query = String.format("DELETE FROM list WHERE imagePath='%s' and name='%s' and phone='%s';", datas[0],datas[1], datas[2]);
             //db.execSQL(query);
 
-           String tempFilePath = sdcard+ File.separator +"Download/MagicBox/"+tempName+".mp4";
+           String tempFilePath;
+           if(!tempName.contains(".mp4")){
+                tempFilePath= sdcard+ File.separator +"Download/MagicBox/"+tempName+".mp4";
+           }
+           else{
+               String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+               tempFilePath= dir + "/" + tempName;
+           }
            File file = new File(tempFilePath);
            if( file.exists() ) {
                if(file.delete()){

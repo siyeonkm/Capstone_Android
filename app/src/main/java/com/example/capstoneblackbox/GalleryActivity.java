@@ -359,18 +359,17 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
         switch (view.getId()){
             case R.id.play:
                 intent = new Intent(GalleryActivity.this, VideoPlayActivity.class);
+                intent.putExtra("videoName", videoName);
+                startActivity(intent);
                 break;
             case R.id.menu:
                 intent = new Intent(GalleryActivity.this, RecordScreenActivity.class);
+                intent.putExtra("videoName", videoName);
+                startActivity(intent);
                 break;
 
         }
-//        MyAdapter.ViewHolder viewHolder = (MyAdapter.ViewHolder)recyclerView.findViewHolderForAdapterPosition(position);
-
-        intent.putExtra("videoName", videoName);
-       // intent.putExtra("bitmap", bitmap);
-        startActivity(intent);
-
+        //MyAdapter.ViewHolder viewHolder = (MyAdapter.ViewHolder)recyclerView.findViewHolderForAdapterPosition(position);
         //Toast.makeText(this, viewHolder.)
     }
 

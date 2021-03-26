@@ -110,7 +110,7 @@ public class RecordScreenActivity extends Activity {
                     recordstart.setVisibility(ImageButton.GONE);
                     //startMediaProjection();
                     start = true;
-                    timeText.setVisibility(TextView.VISIBLE);
+                    //timeText.setVisibility(TextView.VISIBLE);
                     onToggleScreenShare();
                 }
                 else{
@@ -231,6 +231,7 @@ public class RecordScreenActivity extends Activity {
             return;
         }
         if (resultCode == RESULT_OK) {
+            timeText.setVisibility(TextView.VISIBLE);
             startRecordingService(resultCode, data);
         }else{
             Toast.makeText(this, "Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();

@@ -132,7 +132,7 @@ public class GalleryActivity extends AppCompatActivity implements MyAdapter.OnIt
 
     public void delete(){
         int[] positions = new int[adapter.getItemCount()];
-        // 처음부터 체우기 위한 변수
+        // 처음부터 채우기 위한 변수
         int index = 0;
 
         for(int i = 0; i < adapter.getCheckBoxSize(); i++){

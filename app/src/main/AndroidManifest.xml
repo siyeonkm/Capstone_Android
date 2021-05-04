@@ -38,9 +38,6 @@
         <activity android:name=".UserEditActivity" />
         <activity android:name=".ImpactActivity" />
         <activity android:name=".AbnormalActivity" />
-        <activity
-            android:name=".PopupActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
         <activity android:name=".RecordActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>

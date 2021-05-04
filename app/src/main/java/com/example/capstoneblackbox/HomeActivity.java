@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity {
         btncrop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, PopupActivity.class );
+                Intent intent = new Intent(HomeActivity.this, Popup2Activity.class );
                 startActivity(intent);
             }
         });

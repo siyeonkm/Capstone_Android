@@ -71,13 +71,22 @@ public class Popup2Activity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_FROM_ALBUM) {
 
-            Uri uri2 = data.getData();
+            Uri uri2;
 
-            if (uri2.toString().contains("video")) {
-                UriToPath uri2path = new UriToPath();
-                videopath = uri2path.getPath(p2context, uri2);
-                popup_to_abup();
+            try {
+                uri2 = data.getData();
+                if (uri2.toString().contains("video")) {
+                    UriToPath uri2path = new UriToPath();
+                    videopath = uri2path.getPath(p2context, uri2);
+                    popup_to_abup();
+                }
+
+            } catch (Exception e) {
+                Intent intent = new Intent(Popup2Activity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
+
 
         }
     }

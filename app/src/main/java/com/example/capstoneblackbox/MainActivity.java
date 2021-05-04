@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     public final ConnectServer connectServerPost = new ConnectServer();
 
-    //private String idValidation = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d].{8,15}.$";
-    //private String pwValidation = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
+    private String idValidation = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d].{8,15}.$";
+    private String pwValidation = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";
 
     //oncreate
     @Override
@@ -100,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
                 id = txtId.getText().toString();
                 iderr.setVisibility(View.GONE);
                 idErr = 0;
-                /*if(!id.matches(idValidation) || id.length() == 0 ) {
+                if(!id.matches(idValidation) || id.length() == 0 ) {
                     iderr.setVisibility(View.VISIBLE);
                     idErr = 1;
                 }
                 else {
                     iderr.setVisibility(View.GONE);
                     idErr = 0;
-                }*/
+                }
             }
         });
 
@@ -123,14 +123,14 @@ public class MainActivity extends AppCompatActivity {
                 pw = txtPw.getText().toString();
                 pwerr.setVisibility(View.GONE);
                 pwErr = 0;
-                /*if(!pw.matches(pwValidation) || pw.length() == 0 ) {
+                if(!pw.matches(pwValidation) || pw.length() == 0 ) {
                     pwerr.setVisibility(View.VISIBLE);
                     pwErr = 1;
                 }
                 else {
                     pwerr.setVisibility(View.GONE);
                     pwErr = 0;
-                }*/
+                }
             }
         });
 

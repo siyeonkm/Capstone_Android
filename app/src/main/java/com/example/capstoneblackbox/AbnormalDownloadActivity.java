@@ -8,13 +8,13 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.capstoneblackbox.databinding.ActivityAbnormalBinding;
+import com.example.capstoneblackbox.databinding.ActivityAbnormalDownloadBinding;
 
 import static com.example.capstoneblackbox.MainActivity.mcontext;
 
-public class AbnormalActivity extends AppCompatActivity {
+public class AbnormalDownloadActivity extends AppCompatActivity {
     public static Context abcontext;
-    ActivityAbnormalBinding binding;
+    ActivityAbnormalDownloadBinding binding;
     private long backKeyPressedTime = 0;
     String vidpath;
     Uri viduri;
@@ -23,17 +23,17 @@ public class AbnormalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityAbnormalBinding.inflate(getLayoutInflater());
+        binding = ActivityAbnormalDownloadBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         abcontext = this;
 
         ((MainActivity) mcontext).connectServerPost
-                .requestVideoGet("http://dc1db253aeb0.ngrok.io/output");
+                .requestVideoGet("http://3.34.148.201/output");
     }
 
     public void fromAbtoHomeActivity() {
-        Intent intent = new Intent(AbnormalActivity.this, HomeActivity.class);
+        Intent intent = new Intent(AbnormalDownloadActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

@@ -51,28 +51,24 @@ public class Popup2Activity extends Activity {
             @Override
             public void onClick(View view) {
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestVideoCnt("http://dc1db253aeb0.ngrok.io/api/edited/count");
+                        .requestVideoCnt("http://3.34.148.201/api/edited/count");
             }
         });
 
     }
 
     private void goToAlbum() {
-
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         intent.setType("video/*");
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_FROM_ALBUM) {
-
             Uri uri2;
-
             try {
                 uri2 = data.getData();
                 if (uri2.toString().contains("video")) {
@@ -80,19 +76,16 @@ public class Popup2Activity extends Activity {
                     videopath = uri2path.getPath(p2context, uri2);
                     popup_to_abup();
                 }
-
             } catch (Exception e) {
                 Intent intent = new Intent(Popup2Activity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
-
-
         }
     }
 
     public void popup_to_ab() {
-        Intent intent = new Intent(Popup2Activity.this, AbnormalActivity.class);
+        Intent intent = new Intent(Popup2Activity.this, AbnormalDownloadActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

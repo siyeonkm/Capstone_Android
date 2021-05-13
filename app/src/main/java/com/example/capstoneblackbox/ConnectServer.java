@@ -47,7 +47,8 @@ public class ConnectServer {
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("full_video", "abnorm.mp4", RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
+                .addFormDataPart("full_video", "abnorm.mp4",
+                        RequestBody.create(MediaType.parse("video/mp4"), new File(video)))
                 .addFormDataPart("date", date)
                 .addFormDataPart("size", size)
                 .addFormDataPart("storage_path", path)
@@ -148,8 +149,8 @@ public class ConnectServer {
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 String res = response.body().string();
                 Log.d("aaaa", "Response Body is " + res);
-                if(res.equals("ok")) {
-                    ((SigninActivity)SigninActivity.scontext).goMainActivity();
+                ((SigninActivity)SigninActivity.scontext).goMainActivity();
+                /*if(res.length()>1) {
 
                 }
                 else{
@@ -162,7 +163,7 @@ public class ConnectServer {
                         }
                     }, 0);
 
-                }
+                }*/
             }
         });
     }
@@ -185,11 +186,12 @@ public class ConnectServer {
             public void onResponse(Call call, Response response) throws IOException {
                 Headers responseHeaders = response.headers();
                 String vidcnt_s = response.body().string();
+                Log.d("MESSAGE", "동영상 개수: " + vidcnt_s);
+
                 Arrays.fill(num_of_video, -1);
                 for(int i = 0; i<vidcnt_s.length(); i++) {
                     num_of_video[i] = vidcnt_s.charAt(i) - '0';
                 }
-                Log.d("MESSAGE", "동영상 개수: " + vidcnt_s);
                 ((Popup2Activity)Popup2Activity.p2context).popup_to_ab();
             }
         });
@@ -227,7 +229,8 @@ public class ConnectServer {
                             long downloaded = 0;
                             long target = response.body().contentLength();
 
-                            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath().toString() + "/MagicBoxAbnormal";
+                            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                                    .getAbsolutePath().toString() + "/MagicBoxAbnormal";
                             File dirFile = new File(dir);
 
                             //매직박스용 외부저장소 폴더 생성
@@ -243,7 +246,6 @@ public class ConnectServer {
 
 
                             OutputStream output = new FileOutputStream(mediaFile);
-
                             while (true) {
                                 int readed = inputStream.read(buff);
 

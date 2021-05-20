@@ -66,24 +66,24 @@
 - [X] 주행 중 모델 구축 https://kkminyoung.tistory.com/14
 - [X] 주차 중 모델 구축 https://kkminyoung.tistory.com/14
 - [X] 데이터 추가수집 https://kkminyoung.tistory.com/14
-- [ ] 음성인식 모델 구축
-- [ ] API 배포
+- [X] 음성인식 모델 구축
+- [X] API 배포
 
-#### 안드로이드
+#### 안드로이드          https://csepotato.tistory.com/10
 - [X] 인터페이스 구성     https://csepotato.tistory.com/3 , https://jungyoonn.tistory.com/3
 - [X] figma로 UI 구성    https://csepotato.tistory.com/2
 - [X] 회원가입/로그인 화면 구성  https://csepotato.tistory.com/4 , https://csepotato.tistory.com/5
 - [X] 메인 화면 구성            https://csepotato.tistory.com/4 , https://csepotato.tistory.com/5
 - [X] 영상 녹화 API 삽입
-- [ ] 수정 및 버그 캐치
+- [X] 수정 및 버그 캐치
 
 #### 백엔드
 - [X] 데이터베이스 설계 https://cococode.tistory.com/2
 - [X] 데이터베이스 구현 https://cococode.tistory.com/3
 - [X] Django + Mysql 연결 https://cococode.tistory.com/4
 - [X] Rest API(안드로이드용) https://cococode.tistory.com/5
-- [ ] AWS 호스팅
-- [ ] 앱 및 딥러닝 연결 
+- [X] AWS 호스팅
+- [X] 앱 및 딥러닝 연결 
 
 
 ## 5) License

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CapstoneBlackbox</string>
+    <string name="app_name">MagicBox</string>
 
     <string name="pw_hint">비밀번호</string>
     <string name="id_hint">아이디</string>

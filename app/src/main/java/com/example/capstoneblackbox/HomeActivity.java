@@ -376,10 +376,6 @@ public class HomeActivity extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_MULTI:
                 if (grantResults.length > 0) {
                     boolean cameraAccepted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);  //권한을 허가받았는지 boolean값으로 저장한다.
-                    if (cameraAccepted) {
-                        Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
-                        startActivity(intent);
-                    }
                 }
 
 

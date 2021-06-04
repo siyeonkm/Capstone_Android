@@ -25,6 +25,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+//media scanner용
 import static io.realm.Realm.getApplicationContext;
 
 //서버에 연결해주는 각종 함수들 가짐
@@ -279,5 +280,6 @@ public class ConnectServer {
                 });
             }
         }
+        ((AbnormalDownloadActivity)AbnormalDownloadActivity.abcontext).fromAbtoHomeActivity();
     }
 }

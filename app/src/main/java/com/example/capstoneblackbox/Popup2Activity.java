@@ -51,7 +51,7 @@ public class Popup2Activity extends Activity {
             @Override
             public void onClick(View view) {
                 ((MainActivity)MainActivity.mcontext).connectServerPost
-                        .requestVideoCnt("http://3.34.148.201/api/edited/count");
+                        .requestVideoCnt("http://3.35.118.6/api/edited/count");
             }
         });
 

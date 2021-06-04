@@ -111,7 +111,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         else {
             holder.checkBox.setVisibility(View.GONE);
         }
-        holder.play.setBackground(ContextCompat.getDrawable(getApplicationContext(),list.get(position).getPlayButton()));
+        holder.play.setBackground(ContextCompat.getDrawable(context, list.get(position).getPlayButton()));
+
 
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override

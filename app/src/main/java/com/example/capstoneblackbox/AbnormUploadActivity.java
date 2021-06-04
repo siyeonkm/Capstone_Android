@@ -28,7 +28,7 @@ public class AbnormUploadActivity extends AppCompatActivity {
         String video_path = ((Popup2Activity)Popup2Activity.p2context).videopath;
 
         ((MainActivity)MainActivity.mcontext).connectServerPost
-                .requestPost("http://3.34.148.201/api/full", video_path, path, size, date, user_id);
+                .requestPost("http://3.35.118.6/api/full", video_path, path, size, date, user_id);
     }
 
     public void fromAbUptoHomeActivity() {

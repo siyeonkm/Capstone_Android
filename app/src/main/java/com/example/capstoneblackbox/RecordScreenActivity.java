@@ -82,7 +82,7 @@ public class RecordScreenActivity extends Activity {
         StringTokenizer st = new StringTokenizer(videoName,"_");
         while(st.hasMoreTokens()){
             String temp = st.nextToken();
-            if(temp.equals("magicBox"))
+            if(temp.equals("magicBox") || temp.equals("충격"))
                 continue;
             startTime[i++] = Integer.parseInt(temp);
         }

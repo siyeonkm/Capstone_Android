@@ -29,7 +29,7 @@ public class AbnormalDownloadActivity extends AppCompatActivity {
         abcontext = this;
 
         ((MainActivity) mcontext).connectServerPost
-                .requestVideoGet("http://3.34.148.201/output");
+                .requestVideoGet("http://3.35.118.6/output");
     }
 
     public void fromAbtoHomeActivity() {

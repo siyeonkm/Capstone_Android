@@ -68,7 +68,7 @@ public class SigninActivity extends AppCompatActivity {
                     //TODO: id와 pw를 db에서 찾아서 >> 없으면 goHomeActivity
 
                     ((MainActivity)MainActivity.mcontext).connectServerPost
-                            .requestSameId("http://3.35.118.6/api/user", id, pw);
+                            .requestSameId("", id, pw);
                     //TODO: >> 있으면 토스트 발생 & 안넘어감
                     //Toast.makeText(mcontext, "입력하신 아이디/패스워드가 이미 존재합니다", Toast.LENGTH_LONG).show();
                 }

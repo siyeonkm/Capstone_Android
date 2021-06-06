@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                    //성공여부에 따라서 홈화면으로 이동하는거는 여기서 하도록 작성했었는데
                    //그러면 connectserver가 response받기도 전에 성공못했다고 판단하고 이동을 안하길래
                    //requestpost에서 response에 따라 homeactivity로 전환하도록 작성해놓음
-                   connectServerPost.requestPost("http://3.35.118.6/login", id, pw);
+                   connectServerPost.requestPost("", id, pw);
 
                }
             }
